@@ -18,18 +18,23 @@ import {
   getNewBorderCounts,
   getNewConnectedBoxes,
   getTheNextPlayerTurn,
-  getTheNewBordAfterClickingSide
+  getTheNewBordAfterClickingSide,
+  isDisabled
 } from "./util/BoxInfo";
 import {
   computerMove
-} from "./util/ComputerLogic"
+} from "./util/ComputerLogic";
+import {
+  whoClickTheLine
+} from "./util/WhoClicked";
 
 const Game = () => {
 
-  const [board, setBoard] = useState(gameBoards.level1)
+  const [board, setBoard] = useState(gameBoards.level5)
   const [playerTurn, setPlayerTurn] = useState("first");
   const [borders, setBorders] = useState(borderCount);
   const [connectedBoxes, setConnectedBoxes] = useState(connectedBoxesObj);
+  const [whoScored, setWhoScored] = useState(whoClickTheLine);
 
   useEffect(() => {
     // only use logic if it is the computer turn. ex: "second" player
@@ -93,16 +98,17 @@ const Game = () => {
       setSide(adjBoxName, adjBoxSide);
       adjustBorderCount([index, adjacentBoxIndex]);
       const updatedConnectionsForAdjBox = [];
-      (!board[boxName].disabled) && updatedConnectionsForAdjBox.push(adjacentBoxIndex);
-      (!board[adjBoxName].disabled) && updatedConnectionsForAdjBox.push(index);
+
+      (!isDisabled(board, boxName)) && updatedConnectionsForAdjBox.push(adjacentBoxIndex);
+      (!isDisabled(board, adjBoxName)) && updatedConnectionsForAdjBox.push(index);
       adjustBorderCountForAdjBox(updatedConnectionsForAdjBox);
     } else {
       adjustBorderCount([index]);
     }
 
     const hasScored = boxInfo.hasScored(board, index, adjacentBoxIndex);
-    if((board[boxName] && !board[boxName].disabled) ||
-      (board[adjBoxName] && !board[adjBoxName].disabled)){
+    if((board[boxName] && !isDisabled(board, boxName)) ||
+      (board[adjBoxName] && !isDisabled(board, adjBoxName))){
       setTurnPlayer(hasScored);
     }
   }
@@ -115,14 +121,16 @@ const Game = () => {
         disabled,
         borders
       } = board[data];
-      const isDisabled = disabled || false;
+      const isDisabledBox = disabled || false;
       const hasScored = borders.top && borders.right && borders.bottom && borders.left;
       return (<GameBlock
-        isDisabled={isDisabled}
+        isDisabledBox={isDisabledBox}
         borders={borders}
         clickBorder={clickBorder}
         index={index}
         hasScored={hasScored}
+        whoScored={whoScored}
+        setWhoScored={setWhoScored} // score code the scored boxes, practice on the board and deal with the "disabled of undefined error: this is probably due to a box being referenced that isn't on the board"
         key={index} />)
     })}
   </View>)

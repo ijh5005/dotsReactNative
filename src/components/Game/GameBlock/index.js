@@ -8,7 +8,7 @@ import {
 const GameBlock = (props) => {
 
   const {
-    isDisabled,
+    isDisabledBox,
     borders,
     clickBorder,
     index,
@@ -19,11 +19,11 @@ const GameBlock = (props) => {
   const styles = {
     box: {
       backgroundColor: hasScored ? "#888" : "#eee",
-      height: 60,
-      width: 60,
+      height: 55,
+      width: 55,
       position: "relative",
-      opacity: isDisabled ? 0 : 1,
-      zIndex: isDisabled ? 1 : 5,
+      opacity: isDisabledBox ? 0 : 1,
+      zIndex: isDisabledBox ? 1 : 5,
       borderWidth: 1,
       borderTopColor: borders.top ? "#444" : "#bbb",
       borderRightColor: borders.right ? "#444" : "#bbb",

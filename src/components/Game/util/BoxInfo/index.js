@@ -21,7 +21,7 @@ const getUnclickedSide = (board, boxName) => {
   return sideToClick;
 }
 
-const getUnclickedSides = (board, boxName) => {
+const getUnclickedSides = (board, boxName) => { // check functions that use this. Something passes it a null box name
   const { borders } = getBoxObjByBoxName(board, boxName);
   const sidesToClick = [];
   for(let side in borders){
@@ -139,7 +139,6 @@ export const boxInfo = {
   hasScored: (board, index, adjIndex) => {
     const box = index ? board[`box${index}`] : false;
     const adjBox = adjIndex ? board[`box${adjIndex}`] : false;
-
     const hasScoreInBox = box && box.borders.top && box.borders.right && box.borders.bottom && box.borders.left;
     const hasScoreInAdjBox = adjBox && adjBox.borders.top && adjBox.borders.right && adjBox.borders.bottom && adjBox.borders.left;
 
@@ -190,7 +189,7 @@ export const getEdgeBoxOptions = (borders, connectedBoxes, board) => {
   const edgeBoxOptions = [];
 
   Object.keys(board).forEach((data, index) => {
-    if(!board[data].disabled){
+    if(!isDisabled(board, data)){
       const box = `box${index}`;
 
       const {
@@ -244,12 +243,12 @@ export const getOneBorderOptions = (borders, connectedBoxes, board) => {
   const oneBorderOptions = [];
 
   Object.keys(board).forEach((data, index) => {
-    if(!board[data].disabled){
+    if(!isDisabled(board, data)){
       const box = `box${index}`;
       if(borders[box] === 1){
         connectedBoxes[box].forEach((adjConnectedBox, i) => {
-          if((borders[adjConnectedBox] === 0 && !board[adjConnectedBox].disabled)
-          || (borders[adjConnectedBox] === 1 && !board[adjConnectedBox].disabled)){
+          if((borders[adjConnectedBox] === 0 && !isDisabled(board, adjConnectedBox))
+          || (borders[adjConnectedBox] === 1 && !isDisabled(board, adjConnectedBox))){
             const side = getLineBetweenBoxes(box, adjConnectedBox);
             oneBorderOptions.push({ side, index });
           }
@@ -267,11 +266,11 @@ export const getNoBorderOptions = (borders, connectedBoxes, board) => {
   const noBorderOptions = [];
 
   Object.keys(board).forEach((data, index) => {
-    if(!board[data].disabled){
+    if(!isDisabled(board, data)){
       const box = `box${index}`;
       if(borders[box] === 0){
         connectedBoxes[box].forEach((adjConnectedBox, i) => {
-          if(borders[adjConnectedBox] === 0 && !board[adjConnectedBox].disabled){
+          if(borders[adjConnectedBox] === 0 && !isDisabled(board, adjConnectedBox)){
             const side = getLineBetweenBoxes(box, adjConnectedBox);
             noBorderOptions.push({ side, index });
           }
@@ -299,7 +298,7 @@ export const getThreeBorderOptions = (borders, connectedBoxes, board) => {
   const threeBorderOptions = [];
 
   Object.keys(board).forEach((data, index) => {
-    if(!board[data].disabled){
+    if(!isDisabled(board, data)){
       const box = `box${index}`;
       if(borders[box] === 3){
         threeBorderOptions.push({
@@ -317,7 +316,7 @@ export const getPathOptions = (borders, connectedBoxes, board) => {
   const pathClickOptions = [];
   Object.keys(board).forEach((data, index) => {
     const connectedWithTwoBorders = [];
-    if(!board[data].disabled){
+    if(!isDisabled(board, data)){
       const box = `box${index}`;
       if(borders[box] === 2){
         connectedWithTwoBorders.push(box);
@@ -325,8 +324,7 @@ export const getPathOptions = (borders, connectedBoxes, board) => {
         unclickedSides.forEach(unClickedSide => {
           const sideIndex = getSideIndex(unClickedSide);
           const connectedBox = connectedBoxes[box][sideIndex];
-          const isDisabled = board[connectedBox].disabled;
-          if(!isDisabled){
+          if(!isDisabled(board, connectedBox)){
             const unclickedSides = getUnclickedSides(board, connectedBox);
             if(unclickedSides.length === 2){
               connectedWithTwoBorders.push(connectedBox)
@@ -401,4 +399,9 @@ export const getTheNewBordAfterClickingSide = (board, boxName, side) => {
   // set the clicked side to true
   temp[boxName].borders[side] = true;
   return temp;
+}
+
+export const isDisabled = (board, box) => {
+  if(!box) return true;
+  return board[box].disabled;
 }
