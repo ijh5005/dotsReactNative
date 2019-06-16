@@ -13,12 +13,17 @@ const GameBlock = (props) => {
     clickBorder,
     index,
     hasScored,
-    getSides
+    getSides,
+    scored,
+    whoClickedTheLineTracker,
+    boxName
   } = props;
+
+  const bkColor = (scored === "first") ? "#eee" : (scored === "second") ? "#888" : null;
 
   const styles = {
     box: {
-      backgroundColor: hasScored ? "#888" : "#eee",
+      backgroundColor: bkColor,
       height: 55,
       width: 55,
       position: "relative",

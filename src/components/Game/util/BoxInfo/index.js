@@ -137,12 +137,20 @@ export const boxInfo = {
     return { adjBoxSide, adjacentBoxIndex };
   },
   hasScored: (board, index, adjIndex) => {
-    const box = index ? board[`box${index}`] : false;
-    const adjBox = adjIndex ? board[`box${adjIndex}`] : false;
+    const boxName = getBoxNameByIndex(index);
+    const adjBoxName = getBoxNameByIndex(adjIndex);
+    const box = (index || index === 0) ? board[boxName] : false;
+    const adjBox = (adjIndex || adjIndex === 0) ? board[adjBoxName] : false;
     const hasScoreInBox = box && box.borders.top && box.borders.right && box.borders.bottom && box.borders.left;
     const hasScoreInAdjBox = adjBox && adjBox.borders.top && adjBox.borders.right && adjBox.borders.bottom && adjBox.borders.left;
-
-    return hasScoreInBox || hasScoreInAdjBox;
+    if(hasScoreInBox && hasScoreInAdjBox){
+      return { scored: true, boxes: [boxName, adjBoxName] }
+    } else if (hasScoreInBox) {
+      return { scored: true, boxes: [boxName] }
+    } else if (hasScoreInAdjBox) {
+      return { scored: true, boxes: [adjBoxName] }
+    }
+    return { scored: false, boxes: [] }
   }
 }
 

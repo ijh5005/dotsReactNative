@@ -25,8 +25,11 @@ import {
   computerMove
 } from "./util/ComputerLogic";
 import {
-  whoClickTheLine
+  whoClickedTheLine
 } from "./util/WhoClicked";
+import {
+  whoScoredObj
+} from "./util/WhoScored";
 
 const Game = () => {
 
@@ -34,18 +37,22 @@ const Game = () => {
   const [playerTurn, setPlayerTurn] = useState("first");
   const [borders, setBorders] = useState(borderCount);
   const [connectedBoxes, setConnectedBoxes] = useState(connectedBoxesObj);
-  const [whoScored, setWhoScored] = useState(whoClickTheLine);
+  const [whoScored, setWhoScored] = useState(whoScoredObj);
+  const [whoClickedTheLineTracker, setWhoClickedTheLineTracker] = useState(whoClickedTheLine);
+  const [click, setClick] = useState(false);
 
   useEffect(() => {
-    // only use logic if it is the computer turn. ex: "second" player
-    if(playerTurn !== "second") return;
-    // get a move for the computer to make
-    const move = computerMove(borders, connectedBoxes, board);
-    // if the move is empty the computer has no moves
-    if(!move) return;
-    // if the move is not empty make a computer mover
-    clickBorder(move.side, move.index);
-  }, [borders, connectedBoxes]); // this is only used if borders or connectedBoxes change
+    setTimeout(() => {
+      // only use logic if it is the computer turn. ex: "second" player
+      if(playerTurn !== "second") return;
+      // get a move for the computer to make
+      const move = computerMove(borders, connectedBoxes, board);
+      // if the move is empty the computer has no moves
+      if(!move) return;
+      // if the move is not empty make a computer mover
+      clickBorder(move.side, move.index);
+    }, 100)
+  }, [playerTurn, whoScored]); // this is only used if borders or connectedBoxes change
 
   // styles for the game
   const styles = {
@@ -69,11 +76,36 @@ const Game = () => {
     setConnectedBoxes({ ...temp });
   }
 
-  const setTurnPlayer = (hasScored) => {
+  const setTurnPlayer = (hasScored, clickedIndexes) => {
+    const {scored, boxes} = hasScored;
     // set the turn to the next play turn if there was not a score
-    if(!hasScored){
+    if(!scored){
       const whosTurn = getTheNextPlayerTurn(playerTurn);
       setPlayerTurn(whosTurn);
+    } else {
+
+      const boxIndex = clickedIndexes[0];
+      const box = (boxIndex || boxIndex === 0) ? getBoxNameByIndex(boxIndex) : false;
+      const boxLineCount = box ? borders[box] : false;
+      const boxAboutToScored = boxLineCount === 3;
+
+      const adjBoxIndex = clickedIndexes[1];
+      const adjBox = (adjBoxIndex || adjBoxIndex === 0) ? getBoxNameByIndex(adjBoxIndex) : false;
+      const adjBoxLineCount = adjBox ? borders[adjBox] : false;
+      const adjBoxAboutToScored = adjBoxLineCount === 3;
+
+      const setScoredPlayer = {};
+      if(boxAboutToScored && adjBoxAboutToScored){
+        setScoredPlayer[box] = playerTurn;
+        setScoredPlayer[adjBox] = playerTurn;
+      } else if (boxAboutToScored) {
+        setScoredPlayer[box] = playerTurn;
+      } else if (adjBoxAboutToScored) {
+        setScoredPlayer[adjBox] = playerTurn;
+      }
+
+      setWhoScored({ ...whoScored, ...setScoredPlayer })
+
     }
   }
 
@@ -94,7 +126,7 @@ const Game = () => {
     const adjBoxName = getBoxNameByIndex(adjacentBoxIndex);
     const adjSide = getBoxSideBySide(adjBoxSide);
 
-    if(adjacentBoxIndex){
+    if(adjacentBoxIndex || adjacentBoxIndex === 0){
       setSide(adjBoxName, adjBoxSide);
       adjustBorderCount([index, adjacentBoxIndex]);
       const updatedConnectionsForAdjBox = [];
@@ -109,7 +141,7 @@ const Game = () => {
     const hasScored = boxInfo.hasScored(board, index, adjacentBoxIndex);
     if((board[boxName] && !isDisabled(board, boxName)) ||
       (board[adjBoxName] && !isDisabled(board, adjBoxName))){
-      setTurnPlayer(hasScored);
+      setTurnPlayer(hasScored, [index, adjacentBoxIndex]);
     }
   }
 
@@ -121,6 +153,7 @@ const Game = () => {
         disabled,
         borders
       } = board[data];
+      const box = getBoxNameByIndex(index)
       const isDisabledBox = disabled || false;
       const hasScored = borders.top && borders.right && borders.bottom && borders.left;
       return (<GameBlock
@@ -129,8 +162,9 @@ const Game = () => {
         clickBorder={clickBorder}
         index={index}
         hasScored={hasScored}
-        whoScored={whoScored}
+        scored={whoScored[box]}
         setWhoScored={setWhoScored} // score code the scored boxes, practice on the board and deal with the "disabled of undefined error: this is probably due to a box being referenced that isn't on the board"
+        whoClickedTheLineTracker={whoClickedTheLineTracker}
         key={index} />)
     })}
   </View>)

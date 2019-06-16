@@ -1,5 +1,5 @@
 // tracks who clicked on each line
-export const whoClickTheLine = {
+export const whoClickedTheLine = {
   box0: {
     top: null,
     right: null,
