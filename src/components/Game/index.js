@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Image,
+  Dimensions
 } from "react-native";
 
+import GameScoreBoard from "./GameScoreBoard";
 import GameBlock from "./GameBlock";
+
 import { gameBoards } from "./GameBoards";
 import {
   boxInfo,
@@ -19,7 +23,8 @@ import {
   getNewConnectedBoxes,
   getTheNextPlayerTurn,
   getTheNewBordAfterClickingSide,
-  isDisabled
+  isDisabled,
+  getSidesInfo
 } from "./util/BoxInfo";
 import {
   computerMove
@@ -31,6 +36,12 @@ import {
   whoScoredObj
 } from "./util/WhoScored";
 
+const source = "https://d17fnq9dkz9hgj.cloudfront.net/breed-uploads/2018/09/dog-landing-hero-lg.jpg?bust=1536935129&width=1080";
+const img = require("../../imgs/bkImg.png");
+const resizeMode = 'center';
+var width = Dimensions.get('window').width; //full width
+var height = Dimensions.get('window').height; //full height
+
 const Game = () => {
 
   const [board, setBoard] = useState(gameBoards.level5)
@@ -39,7 +50,7 @@ const Game = () => {
   const [connectedBoxes, setConnectedBoxes] = useState(connectedBoxesObj);
   const [whoScored, setWhoScored] = useState(whoScoredObj);
   const [whoClickedTheLineTracker, setWhoClickedTheLineTracker] = useState(whoClickedTheLine);
-  const [click, setClick] = useState(false);
+  const [computerLastLineClick, setComputerLastLineClick] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -60,7 +71,9 @@ const Game = () => {
       flexDirection: "row",
       flexWrap: "wrap",
       justifyContent: "center",
-      alignItems: "center"
+      alignItems: "center",
+      height,
+      width
     }
   }
 
@@ -74,6 +87,38 @@ const Game = () => {
   const adjustBorderCountForAdjBox = (index) => {
     const temp = getNewConnectedBoxes(connectedBoxes, index);
     setConnectedBoxes({ ...temp });
+  }
+
+  const setComputerLastClickedLine = (state) => {
+    (playerTurn === "second") ? setComputerLastLineClick(state) : setComputerLastLineClick(false);
+  }
+
+  const setLineColor = (indexes, sides) => {
+    const boxIndex = indexes[0];
+    const box = getBoxNameByIndex(boxIndex);
+    const boxSide = sides[0];
+
+    const adjBoxIndex = indexes[1];
+    const adjBox = getBoxNameByIndex(adjBoxIndex);
+    const adjBoxSide = sides[1];
+
+    const linesClickedObj = {};
+
+    const temp = {...whoClickedTheLineTracker};
+    if((boxIndex || boxIndex === 0) && (adjBoxIndex || adjBoxIndex === 0)){
+      temp[box][boxSide] = playerTurn;
+      temp[adjBox][adjBoxSide] = playerTurn;
+      setComputerLastClickedLine({boxes: [box, adjBox], sides: [boxSide, adjBoxSide]});
+    } else if (boxIndex || boxIndex === 0) {
+      temp[box][boxSide] = playerTurn;
+      setComputerLastClickedLine({boxes: [box], sides: [boxSide]});
+    } else if (adjBoxIndex || adjBoxIndex === 0) {
+      temp[adjBox][adjBoxSide] = playerTurn;
+      setComputerLastClickedLine({boxes: [adjBox], sides: [adjBoxSide]});
+    }
+    setWhoClickedTheLineTracker({
+      ...temp
+    })
   }
 
   const setTurnPlayer = (hasScored, clickedIndexes) => {
@@ -116,7 +161,6 @@ const Game = () => {
 
   const clickBorder = (side, index) => {
     const boxName = getBoxNameByIndex(index);
-    const boxSide = getBoxSideBySide(side);
     const boxObj = getBoxObjByBoxName(board, boxName);
     const { disabled, borders } = boxObj;
     if(!isClickable(borders, side)) return console.log("line not clickable");
@@ -124,7 +168,6 @@ const Game = () => {
 
     const { adjBoxSide, adjacentBoxIndex } = boxInfo.getAdjacentBoxInfo(board, side, index);
     const adjBoxName = getBoxNameByIndex(adjacentBoxIndex);
-    const adjSide = getBoxSideBySide(adjBoxSide);
 
     if(adjacentBoxIndex || adjacentBoxIndex === 0){
       setSide(adjBoxName, adjBoxSide);
@@ -141,21 +184,47 @@ const Game = () => {
     const hasScored = boxInfo.hasScored(board, index, adjacentBoxIndex);
     if((board[boxName] && !isDisabled(board, boxName)) ||
       (board[adjBoxName] && !isDisabled(board, adjBoxName))){
+      setLineColor([index, adjacentBoxIndex], [side, adjBoxSide]);
       setTurnPlayer(hasScored, [index, adjacentBoxIndex]);
     }
   }
 
   const keys = Object.keys(board);
 
+  const imgStyle = {
+    width,
+    height,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    paddingTop: 40
+  }
+
   return (<View style={styles.boardStyle}>
+    <Image
+      style={imgStyle}
+      source={img}
+    />
+    <GameScoreBoard />
     {keys.map((data, index) => {
       const {
         disabled,
         borders
       } = board[data];
+      const {
+        isTopRightCornerBox,
+        isTopLeftCornerBox,
+        isBottomRightCornerBox,
+        isBottomLeftCornerBox,
+        isTopSideRow,
+        isRightSideRow,
+        isBottomSideRow,
+        isLeftSideRow
+      } = getSidesInfo(board, index);
       const box = getBoxNameByIndex(index)
       const isDisabledBox = disabled || false;
       const hasScored = borders.top && borders.right && borders.bottom && borders.left;
+      const borderColors = boxInfo.getBorderColors(box, whoClickedTheLineTracker);
       return (<GameBlock
         isDisabledBox={isDisabledBox}
         borders={borders}
@@ -163,10 +232,18 @@ const Game = () => {
         index={index}
         hasScored={hasScored}
         scored={whoScored[box]}
-        setWhoScored={setWhoScored} // score code the scored boxes, practice on the board and deal with the "disabled of undefined error: this is probably due to a box being referenced that isn't on the board"
-        whoClickedTheLineTracker={whoClickedTheLineTracker}
-        key={index} />)
-    })}
+        borderColors={borderColors}
+        computerLastLineClick={computerLastLineClick}
+        boxName={box}
+        isTopRightCornerBox={isTopRightCornerBox}
+        isTopLeftCornerBox={isTopLeftCornerBox}
+        isBottomRightCornerBox={isBottomRightCornerBox}
+        isBottomLeftCornerBox={isBottomLeftCornerBox}
+        isTopSideRow={isTopSideRow}
+        isRightSideRow={isRightSideRow}
+        isBottomSideRow={isBottomSideRow}
+        isLeftSideRow={isLeftSideRow}
+        key={index} />)})}
   </View>)
 
 }

@@ -151,6 +151,14 @@ export const boxInfo = {
       return { scored: true, boxes: [adjBoxName] }
     }
     return { scored: false, boxes: [] }
+  },
+  getBorderColors: (box, whoClickedTheLineTracker) => {
+    const borderColors = [];
+    const borderObject = {...whoClickedTheLineTracker[box]}
+    for(let i in borderObject){
+      borderColors.push(borderObject[i]);
+    }
+    return borderColors;
   }
 }
 
