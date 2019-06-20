@@ -9,6 +9,11 @@ var width = Dimensions.get('window').width; //full width
 
 const GameScoreBoard = (props) => {
 
+  const {
+    yourScore,
+    computerScore
+  } = props;
+
   const styles = {
     scoreBoardStyle: {
       width,
@@ -41,11 +46,11 @@ const GameScoreBoard = (props) => {
   return (<View style={styles.scoreBoardStyle}>
     <View style={styles.scoreBoxStyle}>
       <Text style={styles.scoreTextStyle}>your score</Text>
-      <Text style={styles.yourScoreStyle}>0</Text>
+      <Text style={styles.yourScoreStyle}>{yourScore}</Text>
     </View>
     <View style={styles.scoreBoxStyle}>
       <Text style={styles.scoreTextStyle}>computer</Text>
-      <Text style={styles.computerScoreStyle}>0</Text>
+      <Text style={styles.computerScoreStyle}>{computerScore}</Text>
     </View>
   </View>)
 

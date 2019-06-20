@@ -51,6 +51,9 @@ const Game = () => {
   const [whoScored, setWhoScored] = useState(whoScoredObj);
   const [whoClickedTheLineTracker, setWhoClickedTheLineTracker] = useState(whoClickedTheLine);
   const [computerLastLineClick, setComputerLastLineClick] = useState(false);
+  const [yourScore, setYourScore] = useState(0);
+  const [computerScore, setComputerScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -64,6 +67,23 @@ const Game = () => {
       clickBorder(move.side, move.index);
     }, 100)
   }, [playerTurn, whoScored]); // this is only used if borders or connectedBoxes change
+
+  useEffect(() => {
+    let yourScoreCount = 0;
+    let computerScoreCount = 0;
+    for(let i in whoScored){
+      if(whoScored[i] === "first"){
+        yourScoreCount++;
+      } else if (whoScored[i] === "second") {
+        computerScoreCount++;
+      }
+    }
+    setYourScore(yourScoreCount);
+    setComputerScore(computerScoreCount);
+    if(yourScoreCount + computerScoreCount === 36){
+      setGameOver(true)
+    }
+  }, [whoScored])
 
   // styles for the game
   const styles = {
@@ -205,7 +225,10 @@ const Game = () => {
       style={imgStyle}
       source={img}
     />
-    <GameScoreBoard />
+    <GameScoreBoard
+      yourScore={yourScore}
+      computerScore={computerScore}
+    />
     {keys.map((data, index) => {
       const {
         disabled,

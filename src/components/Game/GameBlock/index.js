@@ -30,7 +30,7 @@ const GameBlock = (props) => {
     isLeftSideRow
   } = props;
 
-  const bkColor = (scored === "first") ? "#eee" : (scored === "second") ? "#2b0938" : null;
+  const bkColor = (scored === "second") && "#2b0938";
   let topBorderColor = (borderColors[0] === "first") ? "#b57800" : (borderColors[0] === "second") ? "#980000" : "rgb(73, 17, 94)";
   let rightBorderColor = (borderColors[1] === "first") ? "#b57800" : (borderColors[1] === "second") ? "#980000" : "rgb(73, 17, 94)";
   let bottomBorderColor = (borderColors[2] === "first") ? "#b57800" : (borderColors[2] === "second") ? "#980000" : "rgb(73, 17, 94)";
@@ -145,25 +145,41 @@ const GameBlock = (props) => {
       borderRadius: 2
     },
     yourScore: {
-      height: undefined,
-      width: undefined,
-      flex: 1
+      backgroundColor: "#222",
+      height: "100%",
+      width: "100%",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      opacity: (scored === "first") ? 1 : 0
     }
   }
 
   return (<TouchableOpacity>
     <View style={{...styles.box, ...borderStyles}}>
 
+      <View style={styles.yourScore}>
+        <Image
+          style={{flex:1, height: null, width: null}}
+          source={img}
+        />
+      </View>
+
       <View style={styles.topLeft} />
       <View style={styles.topRight} />
       <View style={styles.bottomLeft} />
       <View style={styles.bottomRight} />
 
-      <Image
-        style={{flex:1, height: undefined, width: undefined}}
-        source={img}
-        resizeMode={"cover"}
-      />
+      <View style={{
+        height: 10,
+        width: 10,
+        flex : 1
+      }}>
+        <Image
+          style={{flex:1, height: null, width: null}}
+          source={img}
+        />
+      </View>
 
       <TouchableOpacity style={styles.top} onPress={() => clickBorder("top", index)}>
         <View />
