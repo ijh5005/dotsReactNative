@@ -26,7 +26,11 @@ export const computerMove = (borders, connectedBoxes, board) => {
         if(edgeBoxOptions.length){
           choice = getRandomBoxChoice(edgeBoxOptions);
         } else {
-          choice = getPathOptions(borders, connectedBoxes, board);
+          let isGameOver = true;
+          for(let i in borders){
+            if(borders[i] !== 4) isGameOver = false;
+          }
+          if(!isGameOver) choice = getPathOptions(borders, connectedBoxes, board);
         }
       }
     }
