@@ -64,7 +64,7 @@ const Game = () => {
       // if the move is empty the computer has no moves
       if(!move) return;
       // if the move is not empty make a computer mover
-      clickBorder(move.side, move.index);
+      clickBorder(move.side, move.index, "second");
     }, 100)
   }, [playerTurn, whoScored]); // this is only used if borders or connectedBoxes change
 
@@ -179,7 +179,9 @@ const Game = () => {
     setBoard(temp);
   }
 
-  const clickBorder = (side, index) => {
+  const clickBorder = (side, index, player) => {
+    if(player !== playerTurn) return console.log("not your turn")
+
     const boxName = getBoxNameByIndex(index);
     const boxObj = getBoxObjByBoxName(board, boxName);
     const { disabled, borders } = boxObj;
@@ -228,6 +230,7 @@ const Game = () => {
     <GameScoreBoard
       yourScore={yourScore}
       computerScore={computerScore}
+      playerTurn={playerTurn}
     />
     {keys.map((data, index) => {
       const {

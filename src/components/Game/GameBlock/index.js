@@ -1,14 +1,101 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  Image
+  Image,
+  Animated
 } from "react-native";
 
 const img = require("../../../imgs/gold.png");
 
 const GameBlock = (props) => {
+
+  let opacity = new Animated.Value(0);
+
+  /*useEffect(() => {
+    setTimeout(() => {
+
+      if(index === 3){
+        Animated.timing(                  // Animate over time
+          opacity,            // The animated value to drive
+          {
+            toValue: 1,                   // Animate to opacity: 1 (opaque)
+            duration: 200,              // Make it take a while
+          }
+        ).start(() => {
+          Animated.timing(                  // Animate over time
+            opacity,            // The animated value to drive
+            {
+              toValue: 0,                   // Animate to opacity: 1 (opaque)
+              duration: 200,              // Make it take a while
+            }
+          ).start();
+        });
+      }
+
+      if(index === 2 || index === 4){
+        setTimeout(() => {
+          Animated.timing(                  // Animate over time
+            opacity,            // The animated value to drive
+            {
+              toValue: 1,                   // Animate to opacity: 1 (opaque)
+              duration: 200,              // Make it take a while
+            }
+          ).start(() => {
+            Animated.timing(                  // Animate over time
+              opacity,            // The animated value to drive
+              {
+                toValue: 0,                   // Animate to opacity: 1 (opaque)
+                duration: 200,              // Make it take a while
+              }
+            ).start();
+          });
+        }, 50)
+      }
+
+      if(index === 1 || index === 5){
+        setTimeout(() => {
+          Animated.timing(                  // Animate over time
+            opacity,            // The animated value to drive
+            {
+              toValue: 1,                   // Animate to opacity: 1 (opaque)
+              duration: 200,              // Make it take a while
+            }
+          ).start(() => {
+            Animated.timing(                  // Animate over time
+              opacity,            // The animated value to drive
+              {
+                toValue: 0,                   // Animate to opacity: 1 (opaque)
+                duration: 200,              // Make it take a while
+              }
+            ).start();
+          });
+        }, 100)
+      }
+
+      if(index === 0){
+        setTimeout(() => {
+          Animated.timing(                  // Animate over time
+            opacity,            // The animated value to drive
+            {
+              toValue: 1,                   // Animate to opacity: 1 (opaque)
+              duration: 200,              // Make it take a while
+            }
+          ).start(() => {
+            Animated.timing(                  // Animate over time
+              opacity,            // The animated value to drive
+              {
+                toValue: 0,                   // Animate to opacity: 1 (opaque)
+                duration: 200,              // Make it take a while
+              }
+            ).start();
+          });
+        }, 150)
+      }
+
+    }, 1000)
+  }, [])*/
 
   const {
     isDisabledBox,
@@ -86,27 +173,29 @@ const GameBlock = (props) => {
       borderLeftColor: leftBorderColor
     },
     top: {
-      height: "30%",
+      height: "34%",
       width: "100%",
       position: "absolute",
-      top: "-15%",
+      top: "-15%"
     },
     right: {
       height: "100%",
-      width: "30%",
+      width: "34%",
       position: "absolute",
-      right: "-15%",
+      right: "-15%"
     },
     bottom: {
-      height: "30%",
+      height: "34%",
       width: "100%",
       position: "absolute",
-      bottom: "-15%",
+      bottom: "-15%"
     },
     left: {
       height: "100%",
-      width: "30%",
+      width: "34%",
       left: "-15%",
+      position: "absolute",
+      top: 0
     },
     topLeft: {
       position: "absolute",
@@ -145,7 +234,6 @@ const GameBlock = (props) => {
       borderRadius: 2
     },
     yourScore: {
-      backgroundColor: "#222",
       height: "100%",
       width: "100%",
       position: "absolute",
@@ -165,35 +253,27 @@ const GameBlock = (props) => {
         />
       </View>
 
+      <Animated.View style={{height: "100%", width: "100%", backgroundColor: "#980000", opacity: opacity}}>
+      </ Animated.View>
+
       <View style={styles.topLeft} />
       <View style={styles.topRight} />
       <View style={styles.bottomLeft} />
       <View style={styles.bottomRight} />
 
-      <View style={{
-        height: 10,
-        width: 10,
-        flex : 1
-      }}>
-        <Image
-          style={{flex:1, height: null, width: null}}
-          source={img}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.top} onPress={() => clickBorder("top", index)}>
+      <TouchableOpacity style={styles.top} onPress={() => clickBorder("top", index, "first")}>
         <View />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.right} onPress={() => clickBorder("right", index)}>
+      <TouchableOpacity style={styles.right} onPress={() => clickBorder("right", index, "first")}>
         <View />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.bottom} onPress={() => clickBorder("bottom", index)}>
+      <TouchableOpacity style={styles.bottom} onPress={() => clickBorder("bottom", index, "first")}>
         <View />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.left} onPress={() => clickBorder("left", index)}>
+      <TouchableOpacity style={styles.left} onPress={() => clickBorder("left", index, "first")}>
         <View />
       </TouchableOpacity>
 
