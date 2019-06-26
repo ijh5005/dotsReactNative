@@ -181,7 +181,11 @@ const GameBlock = (props) => {
     }
   }
 
-  return (<TouchableOpacity>
+  const clickGameBox = () => {
+    props.setExplosionBoxes("lion", props.index);
+  }
+
+  return (<TouchableOpacity onPress={() => clickGameBox()}>
     <View style={{...styles.box, ...borderStyles}}>
 
       <View style={styles.yourScore}>

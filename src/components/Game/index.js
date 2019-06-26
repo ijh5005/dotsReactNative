@@ -32,9 +32,7 @@ import {
   whoScoredObj
 } from "./util/WhoScored";
 import {
-  lion,
-  panther,
-  cheetah
+  explosions
 } from "./util/ExplosionPattern";
 
 import GameScoreBoard from "./GameScoreBoard";
@@ -225,6 +223,19 @@ const Game = () => {
     paddingTop: 40
   }
 
+  const setExplosionBoxes = (explosionType, boxIndex) => {
+    const temp = {};
+    const explosionMapper = explosions[explosionType][`box${boxIndex}`];
+    let increment = 50;
+    for(let boxRow in explosionMapper){
+      explosionMapper[boxRow].forEach(rowBoxIndex => {
+        temp[rowBoxIndex] = { waitTime: increment };
+      })
+      increment += 100;
+    }
+    setExplodingBoxes(temp);
+  }
+
   return (<View style={styles.boardStyle}>
     <Image
       style={imgStyle}
@@ -273,6 +284,7 @@ const Game = () => {
         isBottomSideRow={isBottomSideRow}
         isLeftSideRow={isLeftSideRow}
         explodingBoxes={explodingBoxes}
+        setExplosionBoxes={setExplosionBoxes}
         key={index} />)})}
     {/*<View>
       <Text>New Game</Text>
