@@ -13,89 +13,27 @@ const GameBlock = (props) => {
 
   let opacity = new Animated.Value(0);
 
-  /*useEffect(() => {
-    setTimeout(() => {
-
-      if(index === 3){
-        Animated.timing(                  // Animate over time
-          opacity,            // The animated value to drive
+  useEffect(() => {
+    if(props.explodingBoxes[props.index]){
+      setTimeout(() => {
+        Animated.timing(
+          opacity,
           {
-            toValue: 1,                   // Animate to opacity: 1 (opaque)
-            duration: 200,              // Make it take a while
+            toValue: 1,
+            duration: 200,
           }
         ).start(() => {
-          Animated.timing(                  // Animate over time
-            opacity,            // The animated value to drive
+          Animated.timing(
+            opacity,
             {
-              toValue: 0,                   // Animate to opacity: 1 (opaque)
-              duration: 200,              // Make it take a while
+              toValue: 0,
+              duration: 200,
             }
           ).start();
         });
-      }
-
-      if(index === 2 || index === 4){
-        setTimeout(() => {
-          Animated.timing(                  // Animate over time
-            opacity,            // The animated value to drive
-            {
-              toValue: 1,                   // Animate to opacity: 1 (opaque)
-              duration: 200,              // Make it take a while
-            }
-          ).start(() => {
-            Animated.timing(                  // Animate over time
-              opacity,            // The animated value to drive
-              {
-                toValue: 0,                   // Animate to opacity: 1 (opaque)
-                duration: 200,              // Make it take a while
-              }
-            ).start();
-          });
-        }, 50)
-      }
-
-      if(index === 1 || index === 5){
-        setTimeout(() => {
-          Animated.timing(                  // Animate over time
-            opacity,            // The animated value to drive
-            {
-              toValue: 1,                   // Animate to opacity: 1 (opaque)
-              duration: 200,              // Make it take a while
-            }
-          ).start(() => {
-            Animated.timing(                  // Animate over time
-              opacity,            // The animated value to drive
-              {
-                toValue: 0,                   // Animate to opacity: 1 (opaque)
-                duration: 200,              // Make it take a while
-              }
-            ).start();
-          });
-        }, 100)
-      }
-
-      if(index === 0){
-        setTimeout(() => {
-          Animated.timing(                  // Animate over time
-            opacity,            // The animated value to drive
-            {
-              toValue: 1,                   // Animate to opacity: 1 (opaque)
-              duration: 200,              // Make it take a while
-            }
-          ).start(() => {
-            Animated.timing(                  // Animate over time
-              opacity,            // The animated value to drive
-              {
-                toValue: 0,                   // Animate to opacity: 1 (opaque)
-                duration: 200,              // Make it take a while
-              }
-            ).start();
-          });
-        }, 150)
-      }
-
-    }, 1000)
-  }, [])*/
+      }, props.explodingBoxes[props.index].waitTime)
+    }
+  }, [props.explodingBoxes]);
 
   const {
     isDisabledBox,

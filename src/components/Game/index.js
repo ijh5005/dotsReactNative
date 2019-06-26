@@ -6,10 +6,6 @@ import {
   Image,
   Dimensions
 } from "react-native";
-
-import GameScoreBoard from "./GameScoreBoard";
-import GameBlock from "./GameBlock";
-
 import { gameBoards } from "./GameBoards";
 import {
   boxInfo,
@@ -35,10 +31,16 @@ import {
 import {
   whoScoredObj
 } from "./util/WhoScored";
+import {
+  lion,
+  panther,
+  cheetah
+} from "./util/ExplosionPattern";
 
-const source = "https://d17fnq9dkz9hgj.cloudfront.net/breed-uploads/2018/09/dog-landing-hero-lg.jpg?bust=1536935129&width=1080";
+import GameScoreBoard from "./GameScoreBoard";
+import GameBlock from "./GameBlock";
+
 const img = require("../../imgs/bkImg.png");
-const resizeMode = 'center';
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
@@ -54,6 +56,7 @@ const Game = () => {
   const [yourScore, setYourScore] = useState(0);
   const [computerScore, setComputerScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [explodingBoxes, setExplodingBoxes] = useState({});
 
   useEffect(() => {
     setTimeout(() => {
@@ -269,7 +272,16 @@ const Game = () => {
         isRightSideRow={isRightSideRow}
         isBottomSideRow={isBottomSideRow}
         isLeftSideRow={isLeftSideRow}
+        explodingBoxes={explodingBoxes}
         key={index} />)})}
+    {/*<View>
+      <Text>New Game</Text>
+      <View>
+        <Text>easy</Text>
+        <Text>medium</Text>
+        <Text>hard</Text>
+      </View>
+    </View>*/}
   </View>)
 
 }
