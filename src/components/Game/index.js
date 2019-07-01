@@ -11,6 +11,7 @@ import {
   boxInfo,
   borderCount,
   connectedBoxesObj,
+  connectedBoxesObjRef,
   getBoxNameByIndex,
   getBoxSideBySide,
   getBoxObjByBoxName,
@@ -20,20 +21,19 @@ import {
   getTheNextPlayerTurn,
   getTheNewBordAfterClickingSide,
   isDisabled,
-  getSidesInfo
+  getSidesInfo,
+  getBorderCounts,
+  getSideIndex,
+  getLightPattern
 } from "./util/BoxInfo";
+import { computerMove } from "./util/ComputerLogic";
+import { whoClickedTheLine } from "./util/WhoClicked";
+import { whoScoredObj } from "./util/WhoScored";
 import {
-  computerMove
-} from "./util/ComputerLogic";
-import {
-  whoClickedTheLine
-} from "./util/WhoClicked";
-import {
-  whoScoredObj
-} from "./util/WhoScored";
-import {
-  explosions
+  explosions,
+  explosionSides
 } from "./util/ExplosionPattern";
+import { explosionStlyes } from "./util/ExplosionStlyes";
 
 import GameScoreBoard from "./GameScoreBoard";
 import GameBlock from "./GameBlock";
@@ -42,12 +42,16 @@ const img = require("../../imgs/bkImg.png");
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
+const cheetahImg = require("../../imgs/asset_cheetah.png");
+const pantherImg = require("../../imgs/asset_panther.png");
+const makedaImg = require("../../imgs/asset_queen_makeda.png");
+
 const Game = () => {
 
   const [board, setBoard] = useState(gameBoards.level5)
   const [playerTurn, setPlayerTurn] = useState("first");
   const [borders, setBorders] = useState(borderCount);
-  const [connectedBoxes, setConnectedBoxes] = useState(connectedBoxesObj);
+  const [connectedBoxes, setConnectedBoxes] = useState({...connectedBoxesObj});
   const [whoScored, setWhoScored] = useState(whoScoredObj);
   const [whoClickedTheLineTracker, setWhoClickedTheLineTracker] = useState(whoClickedTheLine);
   const [computerLastLineClick, setComputerLastLineClick] = useState(false);
@@ -55,6 +59,7 @@ const Game = () => {
   const [computerScore, setComputerScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [explodingBoxes, setExplodingBoxes] = useState({});
+  const [activeBomb, setActiveBomb] = useState("");
 
   useEffect(() => {
     setTimeout(() => {
@@ -98,14 +103,15 @@ const Game = () => {
     }
   }
 
-  const adjustBorderCount = (boxIndex) => {
+  const adjustBorderCount = () => {
     // get the new incremented border counts
-    const temp = getNewBorderCounts(borders, boxIndex);
+    // const temp = getNewBorderCounts(borders, boxIndex);
+    const temp = getBorderCounts(board);
     // set the new borders
     setBorders({ ...temp });
   }
 
-  const adjustBorderCountForAdjBox = (index) => {
+  const adjustConnectedBoxes = (index) => {
     const temp = getNewConnectedBoxes(connectedBoxes, index);
     setConnectedBoxes({ ...temp });
   }
@@ -192,17 +198,16 @@ const Game = () => {
     const { adjBoxSide, adjacentBoxIndex } = boxInfo.getAdjacentBoxInfo(board, side, index);
     const adjBoxName = getBoxNameByIndex(adjacentBoxIndex);
 
+    const updatedConnections = [];
+    (!isDisabled(board, boxName)) && updatedConnections.push(index);
+
     if(adjacentBoxIndex || adjacentBoxIndex === 0){
       setSide(adjBoxName, adjBoxSide);
-      adjustBorderCount([index, adjacentBoxIndex]);
-      const updatedConnectionsForAdjBox = [];
-
-      (!isDisabled(board, boxName)) && updatedConnectionsForAdjBox.push(adjacentBoxIndex);
-      (!isDisabled(board, adjBoxName)) && updatedConnectionsForAdjBox.push(index);
-      adjustBorderCountForAdjBox(updatedConnectionsForAdjBox);
-    } else {
-      adjustBorderCount([index]);
+      (!isDisabled(board, adjBoxName)) && updatedConnections.push(adjacentBoxIndex);
     }
+
+    updatedConnections.length && adjustConnectedBoxes(updatedConnections);
+    adjustBorderCount();
 
     const hasScored = boxInfo.hasScored(board, index, adjacentBoxIndex);
     if((board[boxName] && !isDisabled(board, boxName)) ||
@@ -223,17 +228,58 @@ const Game = () => {
     paddingTop: 40
   }
 
-  const setExplosionBoxes = (explosionType, boxIndex) => {
-    const temp = {};
-    const explosionMapper = explosions[explosionType][`box${boxIndex}`];
-    let increment = 50;
-    for(let boxRow in explosionMapper){
-      explosionMapper[boxRow].forEach(rowBoxIndex => {
-        temp[rowBoxIndex] = { waitTime: increment };
-      })
-      increment += 100;
-    }
+  const bombSection = {
+    height: 100,
+    width,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  }
+
+  const setExplosionBoxes = (boxIndex) => {
+    const temp = getLightPattern(explosions, activeBomb, boxIndex);
     setExplodingBoxes(temp);
+
+    const temp2 = {...board}
+    const temp3 = {...whoClickedTheLineTracker}
+    const temp4 = {...borders}
+    const temp5 = {...connectedBoxes}
+
+    const bombType = explosionSides[activeBomb][`box${boxIndex}`];
+    for(let side in bombType){
+      const sideIndex = getSideIndex(side);
+      bombType[side].forEach(rowBoxIndex => {
+        temp2[`box${rowBoxIndex}`].borders[side] = null;
+        temp3[`box${rowBoxIndex}`][side] = null;
+        temp5[`box${rowBoxIndex}`][rowBoxIndex] = connectedBoxesObjRef[`box${rowBoxIndex}`][sideIndex];
+        whoScored[`box${rowBoxIndex}`] = null;
+
+        const newCount = temp4[`box${rowBoxIndex}`]--;
+        temp4[`box${rowBoxIndex}`] = newCount;
+
+        const boxName = getBoxNameByIndex(rowBoxIndex);
+        if(computerLastLineClick.boxes && computerLastLineClick.boxes.includes(boxName)){
+          const boxIndexInLastClicked = computerLastLineClick.boxes.indexOf(boxName);
+          if(computerLastLineClick.sides[boxIndexInLastClicked] === side){
+            const temp = {...computerLastLineClick};
+            temp.boxes.splice(boxIndexInLastClicked, 1);
+            temp.sides.splice(boxIndexInLastClicked, 1);
+            setComputerLastLineClick(temp);
+          }
+        }
+      });
+    }
+
+    setBoard(temp2)
+    setBorders(temp4)
+    setConnectedBoxes(temp5)
+  }
+
+  const selectBomb = (bomb) => {
+    if(activeBomb === bomb){
+      return setActiveBomb("")
+    }
+    setActiveBomb(bomb)
   }
 
   return (<View style={styles.boardStyle}>
@@ -294,6 +340,38 @@ const Game = () => {
         <Text>hard</Text>
       </View>
     </View>*/}
+    <View
+      style={bombSection}
+    >
+
+      <TouchableOpacity onPress={() => selectBomb("cheetah")}>
+        <View style={activeBomb === "cheetah" ? explosionStlyes.selectedBomb : {}}>
+          <Image
+            style={explosionStlyes.generalBombStlyes()}
+            source={cheetahImg}
+          />
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => selectBomb("panther")}>
+        <View style={activeBomb === "panther" ? explosionStlyes.selectedBomb : {}}>
+          <Image
+            style={explosionStlyes.generalBombStlyes()}
+            source={pantherImg}
+          />
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => selectBomb("makeda")}>
+        <View style={activeBomb === "makeda" ? explosionStlyes.selectedBomb : {}}>
+          <Image
+            style={explosionStlyes.makedaBombStyle()}
+            source={makedaImg}
+          />
+        </View>
+      </TouchableOpacity>
+
+    </View>
   </View>)
 
 }

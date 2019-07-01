@@ -7,6 +7,10 @@ import {
   Animated
 } from "react-native";
 
+import {
+  getBorderStyles
+} from "../util/BoxInfo";
+
 const img = require("../../../imgs/gold.png");
 
 const GameBlock = (props) => {
@@ -55,7 +59,7 @@ const GameBlock = (props) => {
     isLeftSideRow
   } = props;
 
-  const bkColor = (scored === "second") && "#2b0938";
+  const scoreColor = (scored === "second") && "#2b0938";
   let topBorderColor = (borderColors[0] === "first") ? "#b57800" : (borderColors[0] === "second") ? "#980000" : "rgb(73, 17, 94)";
   let rightBorderColor = (borderColors[1] === "first") ? "#b57800" : (borderColors[1] === "second") ? "#980000" : "rgb(73, 17, 94)";
   let bottomBorderColor = (borderColors[2] === "first") ? "#b57800" : (borderColors[2] === "second") ? "#980000" : "rgb(73, 17, 94)";
@@ -75,27 +79,15 @@ const GameBlock = (props) => {
     }
   }
 
-  const borderStyles = {};
-  if((isTopRightCornerBox || isTopLeftCornerBox || isTopSideRow) && !borders.top){
-    borderStyles.borderTopStyle = "dashed";
-    borderStyles.borderTopColor = "#230130";
-  }
-  if((isTopRightCornerBox || isBottomRightCornerBox || isRightSideRow) && !borders.right){
-    borderStyles.borderRightStyle = "dashed";
-    borderStyles.borderRightColor = "#230130";
-  }
-  if((isBottomRightCornerBox || isBottomLeftCornerBox || isBottomSideRow) && !borders.bottom){
-    borderStyles.borderBottomStyle = "dashed";
-    borderStyles.borderBottomColor = "#230130";
-  }
-  if((isTopLeftCornerBox || isBottomLeftCornerBox || isLeftSideRow) && !borders.left){
-    borderStyles.borderLeftStyle = "dashed";
-    borderStyles.borderLeftColor = "#230130";
-  }
+  const borderStyles = getBorderStyles(
+    borders, isTopRightCornerBox, isTopLeftCornerBox,
+    isTopSideRow, isBottomRightCornerBox, isBottomLeftCornerBox,
+    isBottomSideRow, isRightSideRow, isLeftSideRow
+  );
 
   const styles = {
     box: {
-      backgroundColor: bkColor,
+      backgroundColor: scoreColor || 'transparent',
       height: 55,
       width: 55,
       position: "relative",
@@ -182,7 +174,7 @@ const GameBlock = (props) => {
   }
 
   const clickGameBox = () => {
-    props.setExplosionBoxes("lion", props.index);
+    props.setExplosionBoxes(props.index);
   }
 
   return (<TouchableOpacity onPress={() => clickGameBox()}>
