@@ -24,7 +24,8 @@ import {
   getSidesInfo,
   getBorderCounts,
   getSideIndex,
-  getLightPattern
+  getLightPattern,
+  hasFootRestriction
 } from "./util/BoxInfo";
 import { computerMove } from "./util/ComputerLogic";
 import { whoClickedTheLine } from "./util/WhoClicked";
@@ -190,16 +191,19 @@ const Game = () => {
   }
 
   const clickBorder = (side, index, player) => {
-    if(player !== playerTurn) return console.log("not your turn")
+    if(player !== playerTurn) return console.log("not your turn");
 
     const boxName = getBoxNameByIndex(index);
     const boxObj = getBoxObjByBoxName(board, boxName);
     const { disabled, borders } = boxObj;
     if(!isClickable(borders, side)) return console.log("line not clickable");
-    setSide(boxName, side);
 
     const { adjBoxSide, adjacentBoxIndex } = boxInfo.getAdjacentBoxInfo(board, side, index);
     const adjBoxName = getBoxNameByIndex(adjacentBoxIndex);
+
+    if(hasFootRestriction(footIndexes, index, adjacentBoxIndex)) return console.log("foot restriction");
+
+    setSide(boxName, side);
 
     const updatedConnections = [];
     (!isDisabled(board, boxName)) && updatedConnections.push(index);
@@ -275,7 +279,7 @@ const Game = () => {
         const indexInFootArray = temp6.indexOf(rowBoxIndex)
         const isFootBox = indexInFootArray > -1;
         if(isFootBox){
-          temp6.splice(indexInFootArray)
+          temp6.splice(indexInFootArray, 1)
         }
       });
     }

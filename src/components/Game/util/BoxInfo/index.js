@@ -489,3 +489,10 @@ export const getLightPattern = (explosions, activeBomb, boxIndex) => {
   }
   return temp;
 }
+
+export const hasFootRestriction = (footIndexes, index, adjacentBoxIndex) => {
+  if(footIndexes.includes(index) || footIndexes.includes(adjacentBoxIndex)){
+    return true;
+  }
+  return false
+}
