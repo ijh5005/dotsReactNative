@@ -11,7 +11,8 @@ import {
   getBorderStyles
 } from "../util/BoxInfo";
 
-const img = require("../../../imgs/gold.png");
+const gold = require("../../../imgs/gold.png");
+const foot = require("../../../imgs/asset_statue_foot.png");
 
 const GameBlock = (props) => {
 
@@ -56,7 +57,8 @@ const GameBlock = (props) => {
     isTopSideRow,
     isRightSideRow,
     isBottomSideRow,
-    isLeftSideRow
+    isLeftSideRow,
+    footIndexes
   } = props;
 
   const scoreColor = (scored === "second") && "#2b0938";
@@ -168,8 +170,16 @@ const GameBlock = (props) => {
       width: "100%",
       position: "absolute",
       top: 0,
-      left: 0,
-      opacity: (scored === "first") ? 1 : 0
+      left: 0
+    },
+    foot: {
+      height: "80%",
+      width: "80%",
+      position: "absolute",
+      top: "10%",
+      left: "10%",
+      justifyContent: "center",
+      alignItems: "center"
     }
   }
 
@@ -180,12 +190,19 @@ const GameBlock = (props) => {
   return (<TouchableOpacity onPress={() => clickGameBox()}>
     <View style={{...styles.box, ...borderStyles}}>
 
-      <View style={styles.yourScore}>
+      {(scored === "first") && <View style={styles.yourScore}>
         <Image
           style={{flex:1, height: null, width: null}}
-          source={img}
+          source={gold}
         />
-      </View>
+      </View>}
+
+      {(footIndexes.includes(index)) && <View style={styles.foot}>
+        <Image
+          style={{flex:1, height: 50, width: 50}}
+          source={foot}
+        />
+      </View>}
 
       <Animated.View style={{height: "100%", width: "100%", backgroundColor: "#980000", opacity: opacity}}>
       </ Animated.View>

@@ -60,6 +60,9 @@ const Game = () => {
   const [gameOver, setGameOver] = useState(false);
   const [explodingBoxes, setExplodingBoxes] = useState({});
   const [activeBomb, setActiveBomb] = useState("");
+  const [footIndexes, setFootIndexes] = useState([1, 10, 22, 35]);
+
+  let chosenBombs = ["cheetah", "panther", "makeda"];
 
   useEffect(() => {
     setTimeout(() => {
@@ -244,6 +247,7 @@ const Game = () => {
     const temp3 = {...whoClickedTheLineTracker}
     const temp4 = {...borders}
     const temp5 = {...connectedBoxes}
+    const temp6 = [...footIndexes]
 
     const bombType = explosionSides[activeBomb][`box${boxIndex}`];
     for(let side in bombType){
@@ -267,12 +271,19 @@ const Game = () => {
             setComputerLastLineClick(temp);
           }
         }
+
+        const indexInFootArray = temp6.indexOf(rowBoxIndex)
+        const isFootBox = indexInFootArray > -1;
+        if(isFootBox){
+          temp6.splice(indexInFootArray)
+        }
       });
     }
 
-    setBoard(temp2)
-    setBorders(temp4)
-    setConnectedBoxes(temp5)
+    setBoard(temp2);
+    setBorders(temp4);
+    setConnectedBoxes(temp5);
+    setFootIndexes(temp6);
   }
 
   const selectBomb = (bomb) => {
@@ -331,45 +342,34 @@ const Game = () => {
         isLeftSideRow={isLeftSideRow}
         explodingBoxes={explodingBoxes}
         setExplosionBoxes={setExplosionBoxes}
+        footIndexes={footIndexes}
         key={index} />)})}
-    {/*<View>
-      <Text>New Game</Text>
-      <View>
-        <Text>easy</Text>
-        <Text>medium</Text>
-        <Text>hard</Text>
-      </View>
-    </View>*/}
     <View
       style={bombSection}
     >
 
-      <TouchableOpacity onPress={() => selectBomb("cheetah")}>
-        <View style={activeBomb === "cheetah" ? explosionStlyes.selectedBomb : {}}>
+    {chosenBombs.map((data, index) => {
+      let image;
+      let style;
+      if(data === "cheetah"){
+        image = cheetahImg;
+        style = explosionStlyes.generalBombStlyes();
+      } else if (data === "panther") {
+        image = pantherImg
+        style = explosionStlyes.generalBombStlyes();
+      } else if (data === "makeda") {
+        image = makedaImg;
+        style = explosionStlyes.makedaBombStyle();
+      }
+      return (<TouchableOpacity key={index} onPress={() => selectBomb(data)}>
+        <View style={activeBomb === data ? explosionStlyes.selectedBomb : {}}>
           <Image
-            style={explosionStlyes.generalBombStlyes()}
-            source={cheetahImg}
+            style={style}
+            source={image}
           />
         </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => selectBomb("panther")}>
-        <View style={activeBomb === "panther" ? explosionStlyes.selectedBomb : {}}>
-          <Image
-            style={explosionStlyes.generalBombStlyes()}
-            source={pantherImg}
-          />
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => selectBomb("makeda")}>
-        <View style={activeBomb === "makeda" ? explosionStlyes.selectedBomb : {}}>
-          <Image
-            style={explosionStlyes.makedaBombStyle()}
-            source={makedaImg}
-          />
-        </View>
-      </TouchableOpacity>
+      </TouchableOpacity>)
+    })}
 
     </View>
   </View>)
