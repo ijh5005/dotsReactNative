@@ -70,7 +70,7 @@ const Game = () => {
       // only use logic if it is the computer turn. ex: "second" player
       if(playerTurn !== "second") return;
       // get a move for the computer to make
-      const move = computerMove(borders, connectedBoxes, board);
+      const move = computerMove(borders, connectedBoxes, board, footIndexes);
       // if the move is empty the computer has no moves
       if(!move) return;
       // if the move is not empty make a computer mover
@@ -201,7 +201,10 @@ const Game = () => {
     const { adjBoxSide, adjacentBoxIndex } = boxInfo.getAdjacentBoxInfo(board, side, index);
     const adjBoxName = getBoxNameByIndex(adjacentBoxIndex);
 
-    if(hasFootRestriction(footIndexes, index, adjacentBoxIndex)) return console.log("foot restriction");
+    if(hasFootRestriction(footIndexes, index, adjacentBoxIndex)){
+      console.log(index)
+      return console.log("foot restriction")
+    };
 
     setSide(boxName, side);
 
@@ -244,6 +247,8 @@ const Game = () => {
   }
 
   const setExplosionBoxes = (boxIndex) => {
+    if(!activeBomb.length) return;
+
     const temp = getLightPattern(explosions, activeBomb, boxIndex);
     setExplodingBoxes(temp);
 
@@ -295,6 +300,39 @@ const Game = () => {
       return setActiveBomb("")
     }
     setActiveBomb(bomb)
+  }
+
+  const levelSelectSection = {
+    width,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    flexWrap: "wrap"
+  }
+
+  const levelBox = {
+    height: 50,
+    width: 50,
+    backgroundColor: "#270038",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 5
+  }
+
+  const levels = [1, 2, 3, "x", "x", "x", "x", "x", "x", "x", "x", "x"];
+
+  const openLevel = {
+    fontSize: 20,
+    color: "#b57800"
+  }
+
+  const lockedLevel = {
+    fontSize: 20,
+    color: "#fff",
+    padding: 2,
+    opacity: 0.6,
+    fontWeight: "bold"
   }
 
   return (<View style={styles.boardStyle}>
@@ -375,6 +413,20 @@ const Game = () => {
       </TouchableOpacity>)
     })}
 
+    </View>
+    <Text style={{...openLevel, letterSpacing: 5}}>Levels</Text>
+    <View style={levelSelectSection}>
+      {levels.map((data, index) => {
+        const levelStyle = (data === "x") ? lockedLevel : openLevel;
+        const levelText = (data === "x") ? "x" : (index + 1);
+        return (<TouchableOpacity key={index}>
+          <View style={levelBox}>
+            <View style={levelStyle}>
+              <Text style={levelStyle}>{levelText}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>)
+      })}
     </View>
   </View>)
 

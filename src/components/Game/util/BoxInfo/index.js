@@ -71,6 +71,10 @@ const getCount = (borders) => {
   return count;
 }
 
+const getBoxIndexFromName = (box) => {
+  return parseInt(box.replace("box", ""));
+}
+
 // ***************************
 // exported functions
 // ***************************
@@ -217,52 +221,56 @@ export const getRandomBoxChoice = (boxesArray) => {
   return boxesArray[Math.floor(Math.random() * boxesArray.length)];
 }
 
-export const getEdgeBoxOptions = (borders, connectedBoxes, board) => {
+export const getEdgeBoxOptions = (borders, connectedBoxes, board, footIndexes) => {
 
   const edgeBoxOptions = [];
 
   Object.keys(board).forEach((data, index) => {
-    if(!isDisabled(board, data)){
-      const box = `box${index}`;
+    if(data){
+      const boxIndex = getBoxIndexFromName(data);
+      const isAFootBox = footIndexes.includes(boxIndex);
+      if(!isDisabled(board, data) && !isAFootBox){
+        const box = `box${index}`;
 
-      const {
-        isTopRightCornerBox,
-        isTopLeftCornerBox,
-        isBottomRightCornerBox,
-        isBottomLeftCornerBox,
-        isTopSideRow,
-        isRightSideRow,
-        isBottomSideRow,
-        isLeftSideRow
-      } = getSidesInfo(board, index);
+        const {
+          isTopRightCornerBox,
+          isTopLeftCornerBox,
+          isBottomRightCornerBox,
+          isBottomLeftCornerBox,
+          isTopSideRow,
+          isRightSideRow,
+          isBottomSideRow,
+          isLeftSideRow
+        } = getSidesInfo(board, index);
 
-      const topNotClicked = !board[data].borders.top;
-      const rightNotClicked = !board[data].borders.right;
-      const bottomNotClicked = !board[data].borders.bottom;
-      const leftNotClicked = !board[data].borders.left;
+        const topNotClicked = !board[data].borders.top;
+        const rightNotClicked = !board[data].borders.right;
+        const bottomNotClicked = !board[data].borders.bottom;
+        const leftNotClicked = !board[data].borders.left;
 
-      if(topNotClicked &&
-        borders[box] < 2 &&
-        (isTopRightCornerBox || isTopLeftCornerBox || isTopSideRow)){
-          edgeBoxOptions.push({ side: "top", index });
-      }
+        if(topNotClicked &&
+          borders[box] < 2 &&
+          (isTopRightCornerBox || isTopLeftCornerBox || isTopSideRow)){
+            edgeBoxOptions.push({ side: "top", index });
+        }
 
-      if (rightNotClicked &&
-        borders[box] < 2 &&
-        (isTopRightCornerBox || isBottomRightCornerBox || isRightSideRow)) {
-          edgeBoxOptions.push({ side: "right", index });
-      }
+        if (rightNotClicked &&
+          borders[box] < 2 &&
+          (isTopRightCornerBox || isBottomRightCornerBox || isRightSideRow)) {
+            edgeBoxOptions.push({ side: "right", index });
+        }
 
-      if (bottomNotClicked &&
-        borders[box] < 2 &&
-        (isBottomRightCornerBox || isBottomLeftCornerBox || isBottomSideRow)) {
-          edgeBoxOptions.push({ side: "bottom", index });
-      }
+        if (bottomNotClicked &&
+          borders[box] < 2 &&
+          (isBottomRightCornerBox || isBottomLeftCornerBox || isBottomSideRow)) {
+            edgeBoxOptions.push({ side: "bottom", index });
+        }
 
-      if (leftNotClicked &&
-        borders[box] < 2 &&
-        (isTopLeftCornerBox || isBottomLeftCornerBox || isLeftSideRow)) {
-          edgeBoxOptions.push({ side: "left", index });
+        if (leftNotClicked &&
+          borders[box] < 2 &&
+          (isTopLeftCornerBox || isBottomLeftCornerBox || isLeftSideRow)) {
+            edgeBoxOptions.push({ side: "left", index });
+        }
       }
     }
   });
@@ -271,21 +279,29 @@ export const getEdgeBoxOptions = (borders, connectedBoxes, board) => {
 
 }
 
-export const getOneBorderOptions = (borders, connectedBoxes, board) => {
+export const getOneBorderOptions = (borders, connectedBoxes, board, footIndexes) => {
 
   const oneBorderOptions = [];
 
   Object.keys(board).forEach((data, index) => {
-    if(!isDisabled(board, data)){
-      const box = `box${index}`;
-      if(borders[box] === 1){
-        connectedBoxes[box].forEach((adjConnectedBox, i) => {
-          if((borders[adjConnectedBox] === 0 && !isDisabled(board, adjConnectedBox))
-          || (borders[adjConnectedBox] === 1 && !isDisabled(board, adjConnectedBox))){
-            const side = getLineBetweenBoxes(box, adjConnectedBox);
-            oneBorderOptions.push({ side, index });
-          }
-        })
+    if(data){
+      const boxIndex = getBoxIndexFromName(data);
+      const isAFootBox = footIndexes.includes(boxIndex);
+      if(!isDisabled(board, data) && !isAFootBox){
+        const box = `box${boxIndex}`;
+        if(borders[box] === 1){
+          connectedBoxes[box].forEach((adjConnectedBox, i) => {
+            if((borders[adjConnectedBox] === 0 && !isDisabled(board, adjConnectedBox))
+            || (borders[adjConnectedBox] === 1 && !isDisabled(board, adjConnectedBox))){
+              const adjBoxIndex = getBoxIndexFromName(adjConnectedBox);
+              const isAdjAFootBox = footIndexes.includes(adjBoxIndex);
+              if(!isAdjAFootBox){
+                const side = getLineBetweenBoxes(box, adjConnectedBox);
+                oneBorderOptions.push({ side, index: boxIndex });
+              }
+            }
+          })
+        }
       }
     }
   });
@@ -294,24 +310,31 @@ export const getOneBorderOptions = (borders, connectedBoxes, board) => {
 
 }
 
-export const getNoBorderOptions = (borders, connectedBoxes, board) => {
+export const getNoBorderOptions = (borders, connectedBoxes, board, footIndexes) => {
 
   const noBorderOptions = [];
 
   Object.keys(board).forEach((data, index) => {
-    if(!isDisabled(board, data)){
-      const box = `box${index}`;
-      if(borders[box] === 0){
-        connectedBoxes[box].forEach((adjConnectedBox, i) => {
-          if(borders[adjConnectedBox] === 0 && !isDisabled(board, adjConnectedBox)){
-            const side = getLineBetweenBoxes(box, adjConnectedBox);
-            noBorderOptions.push({ side, index });
-          }
-        })
+    if(data){
+      const boxIndex = getBoxIndexFromName(data);
+      const isAFootBox = footIndexes.includes(boxIndex)
+      if(!isDisabled(board, data) && !isAFootBox){
+        const box = `box${index}`;
+        if(borders[box] === 0){
+          connectedBoxes[box].forEach((adjConnectedBox, i) => {
+            if(adjConnectedBox){
+              const adjBoxIndex = adjConnectedBox ? getBoxIndexFromName(adjConnectedBox) : null;
+              const isAdjFootBox = footIndexes.includes(adjBoxIndex)
+              if(borders[adjConnectedBox] === 0 && !isDisabled(board, adjConnectedBox) && !isAdjFootBox){
+                const side = getLineBetweenBoxes(box, adjConnectedBox);
+                noBorderOptions.push({ side, index });
+              }
+            }
+          })
+        }
       }
     }
   });
-
   return noBorderOptions;
 }
 
@@ -326,18 +349,35 @@ export const getAdjacentBoxIndex = (index) => {
   return adjIndex;
 }
 
-export const getThreeBorderOptions = (borders, connectedBoxes, board) => {
+export const getThreeBorderOptions = (borders, connectedBoxes, board, footIndexes) => {
 
   const threeBorderOptions = [];
 
   Object.keys(board).forEach((data, index) => {
-    if(!isDisabled(board, data)){
+    const boxIndex = getBoxIndexFromName(data);
+    const isAFootBox = footIndexes.includes(boxIndex)
+    if(!isDisabled(board, data) && !isAFootBox){
       const box = `box${index}`;
       if(borders[box] === 3){
-        threeBorderOptions.push({
-          index,
-          side: getUnclickedSide(board, data)
-        });
+
+        const unclickedSide = getUnclickedSide(board, data);
+        const unClickedSideIndex = getSideIndex(unclickedSide);
+        const unclickedBoxName = connectedBoxesObjRef[data][unClickedSideIndex];
+        if(unclickedBoxName){
+          const unclickedBoxIndex = getBoxIndexFromName(unclickedBoxName);
+          if(!footIndexes.includes(unclickedBoxIndex)){
+            threeBorderOptions.push({
+              index,
+              side: unclickedSide
+            });
+          }
+        } else {
+          threeBorderOptions.push({
+            index,
+            side: unclickedSide
+          });
+        }
+
       }
     }
   });
@@ -345,9 +385,12 @@ export const getThreeBorderOptions = (borders, connectedBoxes, board) => {
   return threeBorderOptions;
 }
 
-export const getPathOptions = (borders, connectedBoxes, board) => {
+export const getPathOptions = (borders, connectedBoxes, board, footIndexes) => {
   const pathClickOptions = [];
   Object.keys(board).forEach((data, index) => {
+    debugger
+    console.log(footIndexes)
+    const boxIndex = getBoxIndexFromName(data);
     const connectedWithTwoBorders = [];
     if(!isDisabled(board, data)){
       const box = `box${index}`;

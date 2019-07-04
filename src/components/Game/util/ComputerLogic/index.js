@@ -7,22 +7,22 @@ import {
   getPathOptions
 } from "../BoxInfo";
 
-export const computerMove = (borders, connectedBoxes, board) => {
+export const computerMove = (borders, connectedBoxes, board, footIndexes) => {
 
   let choice = false;
-  const threeBorderOptions = getThreeBorderOptions(borders, connectedBoxes, board);
+  const threeBorderOptions = getThreeBorderOptions(borders, connectedBoxes, board, footIndexes);
   if(threeBorderOptions.length){
     choice = threeBorderOptions[0];
   } else {
-    const noBorderOptions = getNoBorderOptions(borders, connectedBoxes, board);
+    const noBorderOptions = getNoBorderOptions(borders, connectedBoxes, board, footIndexes);
     if(noBorderOptions.length){
       choice = getRandomBoxChoice(noBorderOptions);
     } else {
-      const oneBorderOptions = getOneBorderOptions(borders, connectedBoxes, board);
+      const oneBorderOptions = getOneBorderOptions(borders, connectedBoxes, board, footIndexes);
       if(oneBorderOptions.length){
         choice = getRandomBoxChoice(oneBorderOptions);
       } else {
-        const edgeBoxOptions = getEdgeBoxOptions(borders, connectedBoxes, board);
+        const edgeBoxOptions = getEdgeBoxOptions(borders, connectedBoxes, board, footIndexes);
         if(edgeBoxOptions.length){
           choice = getRandomBoxChoice(edgeBoxOptions);
         } else {
@@ -30,7 +30,7 @@ export const computerMove = (borders, connectedBoxes, board) => {
           for(let i in borders){
             if(borders[i] !== 4) isGameOver = false;
           }
-          if(!isGameOver) choice = getPathOptions(borders, connectedBoxes, board);
+          if(!isGameOver) choice = getPathOptions(borders, connectedBoxes, board, footIndexes);
         }
       }
     }

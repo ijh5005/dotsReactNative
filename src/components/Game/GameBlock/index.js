@@ -12,7 +12,8 @@ import {
 } from "../util/BoxInfo";
 
 const gold = require("../../../imgs/gold.png");
-const foot = require("../../../imgs/asset_statue_foot.png");
+// const foot = require("../../../imgs/asset_statue_foot.png");
+const foot = require("../../../imgs/foot.png");
 
 const GameBlock = (props) => {
 
@@ -173,11 +174,15 @@ const GameBlock = (props) => {
       left: 0
     },
     foot: {
-      height: "80%",
-      width: "80%",
+      // height: "80%",
+      // width: "80%",
+      height: "120%",
+      width: "100%",
+      top: "-10%",
+      zoom: "10%",
       position: "absolute",
-      top: "10%",
-      left: "10%",
+      // top: "10%",
+      // left: "10%",
       justifyContent: "center",
       alignItems: "center"
     }
