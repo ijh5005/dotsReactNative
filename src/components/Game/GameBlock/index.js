@@ -106,27 +106,27 @@ const GameBlock = (props) => {
       borderLeftColor: leftBorderColor
     },
     top: {
-      height: "34%",
+      height: "40%",
       width: "100%",
       position: "absolute",
-      top: "-15%"
+      top: "-18%"
     },
     right: {
       height: "100%",
-      width: "34%",
+      width: "40%",
       position: "absolute",
-      right: "-15%"
+      right: "-18%"
     },
     bottom: {
-      height: "34%",
+      height: "40%",
       width: "100%",
       position: "absolute",
-      bottom: "-15%"
+      bottom: "-18%"
     },
     left: {
       height: "100%",
-      width: "34%",
-      left: "-15%",
+      width: "40%",
+      left: "-18%",
       position: "absolute",
       top: 0
     },
@@ -179,7 +179,6 @@ const GameBlock = (props) => {
       height: "120%",
       width: "100%",
       top: "-10%",
-      zoom: "10%",
       position: "absolute",
       // top: "10%",
       // left: "10%",
@@ -199,13 +198,6 @@ const GameBlock = (props) => {
         <Image
           style={{flex:1, height: null, width: null}}
           source={gold}
-        />
-      </View>}
-
-      {(footIndexes.includes(index)) && <View style={styles.foot}>
-        <Image
-          style={{flex:1, height: 50, width: 50}}
-          source={foot}
         />
       </View>}
 
@@ -232,6 +224,13 @@ const GameBlock = (props) => {
       <TouchableOpacity style={styles.left} onPress={() => clickBorder("left", index, "first")}>
         <View />
       </TouchableOpacity>
+
+      {(footIndexes.includes(index)) && <View style={styles.foot}>
+        <Image
+          style={{flex:1, height: 50, width: 50}}
+          source={foot}
+        />
+      </View>}
 
     </View>
   </TouchableOpacity>)

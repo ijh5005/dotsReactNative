@@ -335,6 +335,7 @@ export const getNoBorderOptions = (borders, connectedBoxes, board, footIndexes) 
       }
     }
   });
+
   return noBorderOptions;
 }
 
@@ -385,25 +386,43 @@ export const getThreeBorderOptions = (borders, connectedBoxes, board, footIndexe
   return threeBorderOptions;
 }
 
+const isBoxNextToFoot = (board, connectedBoxes, footIndexes, box) => {
+  const unclickedSides = getUnclickedSides(board, box);
+  let isNextToFoot = false;
+  unclickedSides.forEach(unClickedSide => {
+    const unClickedSideIndex = getSideIndex(unClickedSide);
+    const unclickedBoxName = connectedBoxes[box][unClickedSideIndex];
+    if(unclickedBoxName){
+      const unclickedBoxIndex = getBoxIndexFromName(unclickedBoxName);
+      if(footIndexes.includes(unclickedBoxIndex)){
+        isNextToFoot = true;
+      }
+    }
+  })
+  return isNextToFoot;
+}
+
 export const getPathOptions = (borders, connectedBoxes, board, footIndexes) => {
   const pathClickOptions = [];
   Object.keys(board).forEach((data, index) => {
-    debugger
-    console.log(footIndexes)
     const boxIndex = getBoxIndexFromName(data);
     const connectedWithTwoBorders = [];
     if(!isDisabled(board, data)){
       const box = `box${index}`;
-      if(borders[box] === 2){
+      const isNextToFoot = isBoxNextToFoot(board, connectedBoxes, footIndexes, box);
+      if((borders[box] === 2) && !isNextToFoot){
         connectedWithTwoBorders.push(box);
         const unclickedSides = getUnclickedSides(board, box);
         unclickedSides.forEach(unClickedSide => {
           const sideIndex = getSideIndex(unClickedSide);
           const connectedBox = connectedBoxes[box][sideIndex];
           if(!isDisabled(board, connectedBox)){
-            const unclickedSides = getUnclickedSides(board, connectedBox);
-            if(unclickedSides.length === 2){
-              connectedWithTwoBorders.push(connectedBox)
+            const connectedIsNextToFoot = isBoxNextToFoot(board, connectedBoxes, footIndexes, connectedBox);
+            if(!connectedIsNextToFoot){
+              const unclickedSides = getUnclickedSides(board, connectedBox);
+              if(unclickedSides.length === 2){
+                connectedWithTwoBorders.push(connectedBox)
+              }
             }
           }
         })
@@ -411,16 +430,21 @@ export const getPathOptions = (borders, connectedBoxes, board, footIndexes) => {
       }
     }
   });
+
   const consolidated = consolidatePaths(pathClickOptions);
   const iteration2 = consolidatePaths(consolidated);
   const iteration3 = consolidatePaths(iteration2);
   const iteration4 = consolidatePaths(iteration3);
   iteration4.sort((a, b) => {return a.length - b.length});
-  const box = getRandomBoxChoice(iteration4[0]);
-  const sides = getUnclickedSides(board, box);
+
+  if(iteration4.length){
+    const box = getRandomBoxChoice(iteration4[0]);
+    const sides = getUnclickedSides(board, box);
+  }
+
   return {
-    index: parseInt(box.replace("box", "")),
-    side: getRandomBoxChoice(sides)
+    index: iteration4.length ? parseInt(box.replace("box", "")) : null,
+    side: iteration4.length ? getRandomBoxChoice(sides) : null
   };
 }
 

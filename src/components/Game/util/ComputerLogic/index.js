@@ -36,6 +36,8 @@ export const computerMove = (borders, connectedBoxes, board, footIndexes) => {
     }
   }
 
+  if(!choice.side) return false;
+  
   return choice;
 
 }

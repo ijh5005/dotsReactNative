@@ -72,7 +72,9 @@ const Game = () => {
       // get a move for the computer to make
       const move = computerMove(borders, connectedBoxes, board, footIndexes);
       // if the move is empty the computer has no moves
-      if(!move) return;
+      if(!move){
+        return console.log("game over");
+      }
       // if the move is not empty make a computer mover
       clickBorder(move.side, move.index, "second");
     }, 100)
@@ -243,7 +245,8 @@ const Game = () => {
     width,
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: 25
   }
 
   const setExplosionBoxes = (boxIndex) => {
