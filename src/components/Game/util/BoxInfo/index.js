@@ -437,10 +437,10 @@ export const getPathOptions = (borders, connectedBoxes, board, footIndexes) => {
   const iteration4 = consolidatePaths(iteration3);
   iteration4.sort((a, b) => {return a.length - b.length});
 
-  if(iteration4.length){
-    const box = getRandomBoxChoice(iteration4[0]);
-    const sides = getUnclickedSides(board, box);
-  }
+  if(!iteration4.length) return false;
+
+  const box = getRandomBoxChoice(iteration4[0]);
+  const sides = getUnclickedSides(board, box);
 
   return {
     index: iteration4.length ? parseInt(box.replace("box", "")) : null,
