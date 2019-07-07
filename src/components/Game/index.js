@@ -40,6 +40,7 @@ import GameScoreBoard from "./GameScoreBoard";
 import GameBlock from "./GameBlock";
 import GameOver from "./GameOver";
 import YouWin from "./YouWin";
+import HomeScreen from "./HomeScreen";
 
 import { footSquares } from "./FootSquares";
 
@@ -84,6 +85,7 @@ const Game = () => {
   const [gameIsOver, setGameIsOver] = useState(false);
   const [youWin, setYouWin] = useState(false);
   const [boardTotalScore, setBoardTotalScore] = useState(getBoardScore(gameBoards[currentLevel]))
+  const [showHomeScreen, setShowHomeScreen] = useState(true)
 
   let chosenBombs = ["cheetah", "panther", "makeda"];
 
@@ -401,6 +403,14 @@ const Game = () => {
     setGameIsOver(false);
   }
 
+  const startGame = () => {
+    console.log("start game")
+  }
+
+  const motivationPage = () => {
+    console.log("motivation page")
+  }
+
   return (<View style={styles.boardStyle}>
     <Image
       style={imgStyle}
@@ -500,11 +510,15 @@ const Game = () => {
         restartGame={restartGame}
       />}
 
-      {gameIsOver && youWin &&
-        <YouWin
-          restartGame={restartGame}
-          nextLevel={nextLevel}
-        />}
+    {gameIsOver && youWin &&
+      <YouWin
+        restartGame={restartGame}
+        nextLevel={nextLevel}
+      />}
+
+    {showHomeScreen && <HomeScreen
+      startGame={startGame}
+      motivationPage={motivationPage}/>}
 
   </View>)
 
