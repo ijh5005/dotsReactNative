@@ -38,6 +38,10 @@ import { explosionStlyes } from "./util/ExplosionStlyes";
 
 import GameScoreBoard from "./GameScoreBoard";
 import GameBlock from "./GameBlock";
+import GameOver from "./GameOver";
+import YouWin from "./YouWin";
+
+import { footSquares } from "./FootSquares";
 
 const img = require("../../imgs/bkImg.png");
 var width = Dimensions.get('window').width; //full width
@@ -49,34 +53,61 @@ const makedaImg = require("../../imgs/asset_queen_makeda.png");
 
 const Game = () => {
 
-  const [board, setBoard] = useState(gameBoards.level5)
+  const breakRefAndCopy = (obj) => {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
+  const getBoardScore = (board) => {
+    let totalScore = 0;
+    for(let box in board){
+      if(!board[box].disabled){
+        totalScore++;
+      }
+    }
+    return totalScore;
+  }
+
+  const [currentLevel, setCurrentLevel] = useState("level1");
+  const [board, setBoard] = useState(breakRefAndCopy(gameBoards[currentLevel]));
   const [playerTurn, setPlayerTurn] = useState("first");
-  const [borders, setBorders] = useState(borderCount);
-  const [connectedBoxes, setConnectedBoxes] = useState({...connectedBoxesObj});
-  const [whoScored, setWhoScored] = useState(whoScoredObj);
-  const [whoClickedTheLineTracker, setWhoClickedTheLineTracker] = useState(whoClickedTheLine);
+  const [borders, setBorders] = useState(breakRefAndCopy(borderCount));
+  const [connectedBoxes, setConnectedBoxes] = useState(breakRefAndCopy(connectedBoxesObj));
+  const [whoScored, setWhoScored] = useState(breakRefAndCopy(whoScoredObj));
+  const [whoClickedTheLineTracker, setWhoClickedTheLineTracker] = useState(breakRefAndCopy(whoClickedTheLine));
   const [computerLastLineClick, setComputerLastLineClick] = useState(false);
   const [yourScore, setYourScore] = useState(0);
   const [computerScore, setComputerScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [explodingBoxes, setExplodingBoxes] = useState({});
   const [activeBomb, setActiveBomb] = useState("");
-  const [footIndexes, setFootIndexes] = useState([1, 10, 22, 35]);
+  const [footIndexes, setFootIndexes] = useState(footSquares[currentLevel]);
+  const [gameIsOver, setGameIsOver] = useState(false);
+  const [youWin, setYouWin] = useState(false);
+  const [boardTotalScore, setBoardTotalScore] = useState(getBoardScore(gameBoards[currentLevel]))
 
   let chosenBombs = ["cheetah", "panther", "makeda"];
 
   useEffect(() => {
     setTimeout(() => {
       // only use logic if it is the computer turn. ex: "second" player
-      if(playerTurn !== "second") return;
-      // get a move for the computer to make
-      const move = computerMove(borders, connectedBoxes, board, footIndexes);
-      // if the move is empty the computer has no moves
-      if(!move){
-        return console.log("game over");
+      if(playerTurn === "second"){
+        // get a move for the computer to make
+        const move = computerMove(borders, connectedBoxes, board, footIndexes);
+        // if the move is empty the computer has no moves
+        if(!move){
+          setYouWin(yourScore > computerScore);
+          return setGameIsOver(true);
+        }
+        // if the move is not empty make a computer mover
+        clickBorder(move.side, move.index, "second");
+      } else {
+        const totalScore = yourScore + computerScore;
+        const aboutToScoreLastPoint = boardTotalScore - 1
+        if(totalScore === aboutToScoreLastPoint){
+          setYouWin(yourScore > computerScore);
+          return setGameIsOver(true);
+        }
       }
-      // if the move is not empty make a computer mover
-      clickBorder(move.side, move.index, "second");
     }, 100)
   }, [playerTurn, whoScored]); // this is only used if borders or connectedBoxes change
 
@@ -323,7 +354,7 @@ const Game = () => {
     margin: 5
   }
 
-  const levels = [1, 2, 3, "x", "x", "x", "x", "x", "x", "x", "x", "x"];
+  const levels = [1, 2, 3, 4, 5, 6, 7, 8];
 
   const openLevel = {
     fontSize: 20,
@@ -336,6 +367,38 @@ const Game = () => {
     padding: 2,
     opacity: 0.6,
     fontWeight: "bold"
+  }
+
+  const changeLevel = (level, levelText) => {
+    if(levelText !== "x" || !levelText){
+      setBoard(breakRefAndCopy(gameBoards[level]));
+      setPlayerTurn("first");
+      setBorders(breakRefAndCopy(borderCount));
+      setConnectedBoxes(breakRefAndCopy(connectedBoxes));
+      setWhoScored(breakRefAndCopy(whoScoredObj));
+      setWhoClickedTheLineTracker(breakRefAndCopy(whoClickedTheLine));
+      setComputerLastLineClick(false);
+      setYourScore(0);
+      setComputerScore(0);
+      setGameOver(false);
+      setExplodingBoxes({});
+      setActiveBomb("");
+      setFootIndexes(breakRefAndCopy(footSquares[level]));
+      setGameIsOver(false);
+      setCurrentLevel(level);
+    }
+  }
+
+  const restartGame = () => {
+    changeLevel(currentLevel);
+    setGameIsOver(false);
+  }
+
+  const nextLevel = () => {
+    const level = parseInt(currentLevel.replace("level", ""))
+    const nextLevel = level + 1;
+    changeLevel(`level${nextLevel}`);
+    setGameIsOver(false);
   }
 
   return (<View style={styles.boardStyle}>
@@ -422,7 +485,7 @@ const Game = () => {
       {levels.map((data, index) => {
         const levelStyle = (data === "x") ? lockedLevel : openLevel;
         const levelText = (data === "x") ? "x" : (index + 1);
-        return (<TouchableOpacity key={index}>
+        return (<TouchableOpacity key={index} onPress={changeLevel.bind(this, `level${index + 1}`, levelText)}>
           <View style={levelBox}>
             <View style={levelStyle}>
               <Text style={levelStyle}>{levelText}</Text>
@@ -431,6 +494,18 @@ const Game = () => {
         </TouchableOpacity>)
       })}
     </View>
+
+    {gameIsOver && !youWin &&
+      <GameOver
+        restartGame={restartGame}
+      />}
+
+      {gameIsOver && youWin &&
+        <YouWin
+          restartGame={restartGame}
+          nextLevel={nextLevel}
+        />}
+
   </View>)
 
 }
