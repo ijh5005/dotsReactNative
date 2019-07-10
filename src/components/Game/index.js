@@ -48,6 +48,8 @@ const img = require("../../imgs/bkImg.png");
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
+const finalLevel = "level8";
+
 const cheetahImg = require("../../imgs/asset_cheetah.png");
 const pantherImg = require("../../imgs/asset_panther.png");
 const makedaImg = require("../../imgs/asset_queen_makeda.png");
@@ -57,7 +59,6 @@ const Game = () => {
   const breakRefAndCopy = (obj) => {
     return JSON.parse(JSON.stringify(obj));
   }
-
   const getBoardScore = (board) => {
     let totalScore = 0;
     for(let box in board){
@@ -88,6 +89,13 @@ const Game = () => {
   const [showHomeScreen, setShowHomeScreen] = useState(true)
 
   let chosenBombs = ["cheetah", "panther", "makeda"];
+
+  const isDebuggingMode = true;
+  const checkComputerMove = () => {
+    debugger
+    const move = computerMove(borders, connectedBoxes, board, footIndexes);
+    debugger
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -300,10 +308,13 @@ const Game = () => {
       bombType[side].forEach(rowBoxIndex => {
         temp2[`box${rowBoxIndex}`].borders[side] = null;
         temp3[`box${rowBoxIndex}`][side] = null;
-        temp5[`box${rowBoxIndex}`][rowBoxIndex] = connectedBoxesObjRef[`box${rowBoxIndex}`][sideIndex];
+        temp5[`box${rowBoxIndex}`][sideIndex] = connectedBoxesObjRef[`box${rowBoxIndex}`][sideIndex];
         whoScored[`box${rowBoxIndex}`] = null;
 
-        const newCount = temp4[`box${rowBoxIndex}`]--;
+        let newCount = temp4[`box${rowBoxIndex}`];
+        if(newCount > 0){
+          newCount = temp4[`box${rowBoxIndex}`]--;
+        }
         temp4[`box${rowBoxIndex}`] = newCount;
 
         const boxName = getBoxNameByIndex(rowBoxIndex);
@@ -356,6 +367,16 @@ const Game = () => {
     margin: 5
   }
 
+  const homeBox = {
+    height: 50,
+    width: 100,
+    backgroundColor: "#270038",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 5
+  }
+
   const levels = [1, 2, 3, 4, 5, 6, 7, 8];
 
   const openLevel = {
@@ -376,7 +397,7 @@ const Game = () => {
       setBoard(breakRefAndCopy(gameBoards[level]));
       setPlayerTurn("first");
       setBorders(breakRefAndCopy(borderCount));
-      setConnectedBoxes(breakRefAndCopy(connectedBoxes));
+      setConnectedBoxes(breakRefAndCopy(connectedBoxesObj));
       setWhoScored(breakRefAndCopy(whoScoredObj));
       setWhoClickedTheLineTracker(breakRefAndCopy(whoClickedTheLine));
       setComputerLastLineClick(false);
@@ -387,6 +408,8 @@ const Game = () => {
       setActiveBomb("");
       setFootIndexes(breakRefAndCopy(footSquares[level]));
       setGameIsOver(false);
+      setYouWin(false);
+      setBoardTotalScore(getBoardScore(gameBoards[level]));
       setCurrentLevel(level);
     }
   }
@@ -404,11 +427,16 @@ const Game = () => {
   }
 
   const startGame = () => {
-    console.log("start game")
+    changeLevel("level1")
+    setShowHomeScreen(false);
   }
 
   const motivationPage = () => {
     console.log("motivation page")
+  }
+
+  const homePage = () => {
+    setShowHomeScreen(true);
   }
 
   return (<View style={styles.boardStyle}>
@@ -490,7 +518,9 @@ const Game = () => {
     })}
 
     </View>
-    <Text style={{...openLevel, letterSpacing: 5}}>Levels</Text>
+    <TouchableOpacity onPress={isDebuggingMode ? () => { checkComputerMove() } : () => {}}>
+      <Text style={{...openLevel, letterSpacing: 5}}>Levels</Text>
+    </TouchableOpacity>
     <View style={levelSelectSection}>
       {levels.map((data, index) => {
         const levelStyle = (data === "x") ? lockedLevel : openLevel;
@@ -503,6 +533,13 @@ const Game = () => {
           </View>
         </TouchableOpacity>)
       })}
+      <TouchableOpacity onPress={homePage}>
+        <View style={homeBox}>
+          <View style={openLevel}>
+            <Text style={openLevel}>Home</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
     </View>
 
     {gameIsOver && !youWin &&
@@ -514,6 +551,7 @@ const Game = () => {
       <YouWin
         restartGame={restartGame}
         nextLevel={nextLevel}
+        isLastBoard={currentLevel === finalLevel}
       />}
 
     {showHomeScreen && <HomeScreen

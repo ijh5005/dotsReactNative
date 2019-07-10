@@ -11,6 +11,7 @@ import {
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 const img = require("../../../imgs/bkImg.png");
+const titleImg = require("../../../imgs/asset_rhino.png");
 
 const textSectionStlye = (width) => {
   return {
@@ -20,7 +21,10 @@ const textSectionStlye = (width) => {
     position: "absolute",
     top: "0%",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    borderTopWidth: 2,
+    borderTopColor: "#b57800",
+    borderTopStlye: "dotted"
   }
 }
 
@@ -30,7 +34,20 @@ const textBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
     fontSize,
     opacity,
     fontWeight: "bold",
-    fontFamily: "Raleway-Black"
+    fontFamily: "Raleway-Black",
+    letterSpacing: 6,
+    lineHeight: 80
+  }
+}
+
+const nameBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
+  return {
+    color,
+    fontSize,
+    opacity,
+    fontWeight: "bold",
+    fontFamily: "Raleway-Black",
+    letterSpacing: 6
   }
 }
 
@@ -61,6 +78,24 @@ const HomeScreen = (props) => {
         </TouchableOpacity>
       </View>
     </View>
+
+    <View style={{
+      position: "absolute",
+      top: "23%",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "row",
+      width
+    }}>
+      <Text style={nameBoxStlye("#b57800", 100)}>D</Text>
+      <Image
+        style={{height: 60, width: 60, position: "relative", top: 12}}
+        source={titleImg}
+      />
+      <Text style={nameBoxStlye("#b57800", 100)}>T</Text>
+      <Text style={nameBoxStlye("#b57800", 100)}>S</Text>
+    </View>
+
   </View>)
 }
 

@@ -33,7 +33,7 @@ const textBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
 
 const GameOver = (props) => {
 
-  const {restartGame, nextLevel} = props;
+  const {restartGame, nextLevel, isLastBoard} = props;
 
   let top = new Animated.Value(200);
 
@@ -50,13 +50,15 @@ const GameOver = (props) => {
 
   return (<Animated.View style={{width, height, position: "absolute", top , left: 0, backgroundColor: "rgba(39, 0, 56, 0.6)", opacity}}>
     <View style={textSectionStlye(width)}>
-      <Text style={textBoxStlye("#980000", 20, 1)}>YOU WIN!</Text>
+      <Text style={textBoxStlye("#2e8b57", 20, 1)}>YOU WIN!</Text>
       <TouchableOpacity onPress={restartGame}>
         <Text style={textBoxStlye("#fff", 40, 0.6)}>RETRY</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={nextLevel}>
-        <Text style={textBoxStlye("#fff", 40, 0.6)}>NEXT LEVEL</Text>
-      </TouchableOpacity>
+      { !isLastBoard &&
+        <TouchableOpacity onPress={nextLevel}>
+          <Text style={textBoxStlye("#fff", 40, 0.6)}>NEXT LEVEL</Text>
+        </TouchableOpacity>
+      }
     </View>
   </Animated.View>)
 }
