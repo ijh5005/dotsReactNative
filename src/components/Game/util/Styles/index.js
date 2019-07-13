@@ -15,8 +15,7 @@ export const styles = {
         height,
         position: "absolute",
         top: 0,
-        left: 0,
-        paddingTop: 40
+        left: 0
       }
     },
     bombSection: (width) => {
@@ -26,7 +25,7 @@ export const styles = {
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 25
+        marginTop: 10
       }
     },
     levelSelectSection: (width) => {

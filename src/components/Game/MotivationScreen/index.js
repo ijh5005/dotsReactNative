@@ -2,21 +2,16 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   Image,
   Dimensions,
   Animated
 } from "react-native";
-
-import Pointer from "../Pointer";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 const img = require("../../../imgs/bkImg.png");
 
 const StoreScreen = (props) => {
-
-  const { backFromMotivationPage } = props;
 
   const startingColor = 0;
   const endingColor = 1;
@@ -62,7 +57,7 @@ const StoreScreen = (props) => {
     }
   }
 
-  return (<TouchableOpacity onPress={backFromMotivationPage} style={{width, height, position: "absolute"}}>
+  return (<View style={{width, height, position: "absolute"}}>
     <Image
       style={imgStyle}
       source={img}
@@ -88,13 +83,7 @@ const StoreScreen = (props) => {
         We need to embrace our culture and take pride in our presence.
       </Text>
     </View>
-    <Pointer
-      startingLeft={200}
-      startingBottom={20}
-      duration={800}
-      distance={10}
-    />
-  </TouchableOpacity>)
+  </View>)
 }
 
 export default StoreScreen;

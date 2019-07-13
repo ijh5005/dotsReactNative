@@ -83,7 +83,7 @@ const HomeScreen = (props) => {
     outputRange: [ '#270035', '#b57800' ]
   });
 
-  return (<View style={{width, height, position: "absolute"}}>
+  return (<View style={{width, height}}>
     <Image
       style={imgStyle}
       source={img}
