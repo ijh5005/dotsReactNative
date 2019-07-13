@@ -1,7 +1,9 @@
 export const explosionStlyes = {
-  selectedBomb: {
-    backgroundColor: "#230130",
-    borderRadius: 20
+  selectedBomb: (color) => {
+    return {
+      backgroundColor: color,
+      borderRadius: 50
+    }
   },
   generalBombStlyes: () => {
     return {

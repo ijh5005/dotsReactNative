@@ -12,23 +12,21 @@ const pointer = require("../../../imgs/pointer.png");
 
 const Pointer = (props) => {
 
-  const {bottomPosition, leftPosition} = props;
+  const {startingLeft, startingBottom, duration, distance} = props;
 
-  const startingLeft = 100;
-  const stoppingLeft = leftPosition + 20;
-  const startingBottom = 100;
-  const stoppingBottom = bottomPosition + 20;
+  const stoppingLeft = startingLeft + distance;
+  const stoppingBottom = startingBottom + distance;
   let left = new Animated.Value(startingLeft);
-  let bottom = new Animated.Value(startingLeft);
+  let bottom = new Animated.Value(startingBottom);
 
   const moveImage = (value, starting, stopping) => {
     Animated.timing(
       value,
-      { toValue: starting, duration: 500 }
+      { toValue: starting, duration }
     ).start(() => {
       Animated.timing(
         value,
-        { toValue: stopping, duration: 500 }
+        { toValue: stopping, duration }
       ).start(() => {
         moveImage(value, starting, stopping);
       });

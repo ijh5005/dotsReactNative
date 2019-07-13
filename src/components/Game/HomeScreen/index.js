@@ -21,10 +21,7 @@ const textSectionStlye = (width) => {
     position: "absolute",
     top: "0%",
     justifyContent: "center",
-    alignItems: "center",
-    borderTopWidth: 2,
-    borderTopColor: "#b57800",
-    borderTopStlye: "dotted"
+    alignItems: "center"
   }
 }
 
@@ -46,8 +43,7 @@ const nameBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
     fontSize,
     opacity,
     fontWeight: "bold",
-    fontFamily: "Raleway-Black",
-    letterSpacing: 6
+    fontFamily: "Raleway-Black"
   }
 }
 
@@ -64,6 +60,28 @@ const HomeScreen = (props) => {
   const {
     startGame, motivationPage, storePage
   } = props;
+
+  const startingColor = 0;
+  const endingColor = 1;
+  let colorAnimation = new Animated.Value(startingColor);
+
+  const animateScoreBoard = () => {
+    Animated.timing(
+      colorAnimation,
+      { toValue: endingColor, duration: 4000 }
+    ).start(() => {
+      Animated.timing(
+        colorAnimation,
+        { toValue: startingColor, duration: 4000 }
+      ).start(animateScoreBoard);
+    });
+  }
+  animateScoreBoard();
+
+  const letterColor = colorAnimation.interpolate({
+    inputRange: [ 0, 1 ],
+    outputRange: [ '#270035', '#b57800' ]
+  });
 
   return (<View style={{width, height, position: "absolute"}}>
     <Image
@@ -86,19 +104,19 @@ const HomeScreen = (props) => {
 
     <View style={{
       position: "absolute",
-      top: "23%",
+      top: "22%",
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "row",
       width
     }}>
-      <Text style={nameBoxStlye("#b57800", 100)}>D</Text>
+      <Animated.Text style={nameBoxStlye(letterColor, width * 0.3)}>D</Animated.Text>
       <Image
         style={{height: 60, width: 60, position: "relative", top: 12}}
         source={titleImg}
       />
-      <Text style={nameBoxStlye("#b57800", 100)}>T</Text>
-      <Text style={nameBoxStlye("#b57800", 100)}>S</Text>
+      <Animated.Text style={nameBoxStlye(letterColor, width * 0.3)}>T</Animated.Text>
+      <Animated.Text style={nameBoxStlye(letterColor, width * 0.3)}>S</Animated.Text>
     </View>
 
   </View>)

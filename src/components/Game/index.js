@@ -15,7 +15,8 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  AsyncStorage
+  AsyncStorage,
+  Animated
 } from "react-native";
 import { gameBoards } from "./GameBoards";
 import { boxInfo } from "./util/BoxInfo";
@@ -350,11 +351,39 @@ const Game = () => {
 
   const homePage = () => {
     setShowHomeScreen(true);
+    setShowBoard(false);
+  }
+
+  const backFromMotivationPage = () => {
+    setShowHomeScreen(true);
+    setShowMotivationScreen(false);
   }
 
   const closeInformationScreen = () => {
     setShowInformativeScreen(false);
   }
+
+  const startingColor = 0;
+  const endingColor = 1;
+  let colorAnimation = new Animated.Value(startingColor);
+
+  const animateScoreBoard = () => {
+    Animated.timing(
+      colorAnimation,
+      { toValue: endingColor, duration: 1000 }
+    ).start(() => {
+      Animated.timing(
+        colorAnimation,
+        { toValue: startingColor, duration: 1000 }
+      ).start(animateScoreBoard);
+    });
+  }
+  animateScoreBoard();
+
+  const letterColor = colorAnimation.interpolate({
+    inputRange: [ 0, 1 ],
+    outputRange: [ 'transparent', '#b57800' ]
+  });
 
   return (<View style={styles.boardStyle(height, width)}>
     <Image
@@ -425,12 +454,12 @@ const Game = () => {
           style = explosionStlyes.makedaBombStyle();
         }
         return (<TouchableOpacity key={index} onPress={() => selectBomb(data)}>
-          <View style={activeBomb === data ? explosionStlyes.selectedBomb : {}}>
+          <Animated.View style={activeBomb === data ? explosionStlyes.selectedBomb(letterColor) : {}}>
             <Image
               style={style}
               source={image}
             />
-          </View>
+          </Animated.View>
         </TouchableOpacity>)
       })}
     </View>}
@@ -476,6 +505,7 @@ const Game = () => {
       storePage={storePage}/>}
 
     {showMotivationScreen && <MotivationScreen
+      backFromMotivationPage={backFromMotivationPage}
     />}
 
     {showStoreScreen && <StoreScreen
