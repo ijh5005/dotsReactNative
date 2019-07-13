@@ -1,43 +1,36 @@
-import {
-  getRandomBoxChoice,
-  getEdgeBoxOptions,
-  getOneBorderOptions,
-  getNoBorderOptions,
-  getThreeBorderOptions,
-  getPathOptions
-} from "../BoxInfo";
+import { boxInfo } from "../BoxInfo";
 
 export const computerMove = (borders, connectedBoxes, board, footIndexes) => {
 
   let choice = false;
-  const threeBorderOptions = getThreeBorderOptions(borders, connectedBoxes, board, footIndexes);
+  const threeBorderOptions = boxInfo.getThreeBorderOptions(borders, connectedBoxes, board, footIndexes);
   if(threeBorderOptions.length){
     choice = threeBorderOptions[0];
   } else {
-    const noBorderOptions = getNoBorderOptions(borders, connectedBoxes, board, footIndexes);
+    const noBorderOptions = boxInfo.getNoBorderOptions(borders, connectedBoxes, board, footIndexes);
     if(noBorderOptions.length){
-      choice = getRandomBoxChoice(noBorderOptions);
+      choice = boxInfo.getRandomBoxChoice(noBorderOptions);
     } else {
-      const oneBorderOptions = getOneBorderOptions(borders, connectedBoxes, board, footIndexes);
+      const oneBorderOptions = boxInfo.getOneBorderOptions(borders, connectedBoxes, board, footIndexes);
       if(oneBorderOptions.length){
-        choice = getRandomBoxChoice(oneBorderOptions);
+        choice = boxInfo.getRandomBoxChoice(oneBorderOptions);
       } else {
-        const edgeBoxOptions = getEdgeBoxOptions(borders, connectedBoxes, board, footIndexes);
+        const edgeBoxOptions = boxInfo.getEdgeBoxOptions(borders, connectedBoxes, board, footIndexes);
         if(edgeBoxOptions.length){
-          choice = getRandomBoxChoice(edgeBoxOptions);
+          choice = boxInfo.getRandomBoxChoice(edgeBoxOptions);
         } else {
           let isGameOver = true;
           for(let i in borders){
             if(borders[i] !== 4) isGameOver = false;
           }
-          if(!isGameOver) choice = getPathOptions(borders, connectedBoxes, board, footIndexes);
+          if(!isGameOver) choice = boxInfo.getPathOptions(borders, connectedBoxes, board, footIndexes);
         }
       }
     }
   }
 
   if(!choice.side) return false;
-  
+
   return choice;
 
 }

@@ -7,9 +7,7 @@ import {
   Animated
 } from "react-native";
 
-import {
-  getBorderStyles
-} from "../util/BoxInfo";
+import { boxInfo } from "../util/BoxInfo";
 
 const gold = require("../../../imgs/gold.png");
 // const foot = require("../../../imgs/asset_statue_foot.png");
@@ -82,7 +80,7 @@ const GameBlock = (props) => {
     }
   }
 
-  const borderStyles = getBorderStyles(
+  const borderStyles = boxInfo.getBorderStyles(
     borders, isTopRightCornerBox, isTopLeftCornerBox,
     isTopSideRow, isBottomRightCornerBox, isBottomLeftCornerBox,
     isBottomSideRow, isRightSideRow, isLeftSideRow

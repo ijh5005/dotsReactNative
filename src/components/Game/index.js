@@ -7,26 +7,7 @@ import {
   Dimensions
 } from "react-native";
 import { gameBoards } from "./GameBoards";
-import {
-  boxInfo,
-  borderCount,
-  connectedBoxesObj,
-  connectedBoxesObjRef,
-  getBoxNameByIndex,
-  getBoxSideBySide,
-  getBoxObjByBoxName,
-  isClickable,
-  getNewBorderCounts,
-  getNewConnectedBoxes,
-  getTheNextPlayerTurn,
-  getTheNewBordAfterClickingSide,
-  isDisabled,
-  getSidesInfo,
-  getBorderCounts,
-  getSideIndex,
-  getLightPattern,
-  hasFootRestriction
-} from "./util/BoxInfo";
+import { boxInfo } from "./util/BoxInfo";
 import { computerMove } from "./util/ComputerLogic";
 import { whoClickedTheLine } from "./util/WhoClicked";
 import { whoScoredObj } from "./util/WhoScored";
@@ -41,6 +22,8 @@ import GameBlock from "./GameBlock";
 import GameOver from "./GameOver";
 import YouWin from "./YouWin";
 import HomeScreen from "./HomeScreen";
+import InformativeScreen from "./InformativeScreen";
+import Pointer from "./Pointer";
 
 import { footSquares } from "./FootSquares";
 
@@ -72,8 +55,8 @@ const Game = () => {
   const [currentLevel, setCurrentLevel] = useState("level1");
   const [board, setBoard] = useState(breakRefAndCopy(gameBoards[currentLevel]));
   const [playerTurn, setPlayerTurn] = useState("first");
-  const [borders, setBorders] = useState(breakRefAndCopy(borderCount));
-  const [connectedBoxes, setConnectedBoxes] = useState(breakRefAndCopy(connectedBoxesObj));
+  const [borders, setBorders] = useState(breakRefAndCopy(boxInfo.borderCount));
+  const [connectedBoxes, setConnectedBoxes] = useState(breakRefAndCopy(boxInfo.connectedBoxesObj));
   const [whoScored, setWhoScored] = useState(breakRefAndCopy(whoScoredObj));
   const [whoClickedTheLineTracker, setWhoClickedTheLineTracker] = useState(breakRefAndCopy(whoClickedTheLine));
   const [computerLastLineClick, setComputerLastLineClick] = useState(false);
@@ -87,6 +70,16 @@ const Game = () => {
   const [youWin, setYouWin] = useState(false);
   const [boardTotalScore, setBoardTotalScore] = useState(getBoardScore(gameBoards[currentLevel]))
   const [showHomeScreen, setShowHomeScreen] = useState(true)
+  const [showInformativeScreen, setShowInformativeScreen] = useState(false)
+  const [informationType, setInformationType] = useState(null)
+  const [viewPointer, setViewPointer] = useState(false);
+  const [showBoard, setShowBoard] = useState(false);
+
+  const informationBoard = [2, 6];
+  const informationText = {
+    "2": "foot",
+    "6": "makeda"
+  }
 
   let chosenBombs = ["cheetah", "panther", "makeda"];
 
@@ -104,8 +97,11 @@ const Game = () => {
         // get a move for the computer to make
         const move = computerMove(borders, connectedBoxes, board, footIndexes);
         // if the move is empty the computer has no moves
-        if(!move){
+        if(!move && !footIndexes.length){
           setYouWin(yourScore > computerScore);
+          return setGameIsOver(true);
+        } else if (!move) {
+          setYouWin(false)
           return setGameIsOver(true);
         }
         // if the move is not empty make a computer mover
@@ -113,7 +109,7 @@ const Game = () => {
       } else {
         const totalScore = yourScore + computerScore;
         const aboutToScoreLastPoint = boardTotalScore - 1
-        if(totalScore === aboutToScoreLastPoint){
+        if(totalScore === aboutToScoreLastPoint && !footIndexes.length){
           setYouWin(yourScore > computerScore);
           return setGameIsOver(true);
         }
@@ -152,14 +148,14 @@ const Game = () => {
 
   const adjustBorderCount = () => {
     // get the new incremented border counts
-    // const temp = getNewBorderCounts(borders, boxIndex);
-    const temp = getBorderCounts(board);
+    // const temp = boxInfo.getNewBorderCounts(borders, boxIndex);
+    const temp = boxInfo.getBorderCounts(board);
     // set the new borders
     setBorders({ ...temp });
   }
 
   const adjustConnectedBoxes = (index) => {
-    const temp = getNewConnectedBoxes(connectedBoxes, index);
+    const temp = boxInfo.getNewConnectedBoxes(connectedBoxes, index);
     setConnectedBoxes({ ...temp });
   }
 
@@ -169,11 +165,11 @@ const Game = () => {
 
   const setLineColor = (indexes, sides) => {
     const boxIndex = indexes[0];
-    const box = getBoxNameByIndex(boxIndex);
+    const box = boxInfo.getBoxNameByIndex(boxIndex);
     const boxSide = sides[0];
 
     const adjBoxIndex = indexes[1];
-    const adjBox = getBoxNameByIndex(adjBoxIndex);
+    const adjBox = boxInfo.getBoxNameByIndex(adjBoxIndex);
     const adjBoxSide = sides[1];
 
     const linesClickedObj = {};
@@ -199,17 +195,17 @@ const Game = () => {
     const {scored, boxes} = hasScored;
     // set the turn to the next play turn if there was not a score
     if(!scored){
-      const whosTurn = getTheNextPlayerTurn(playerTurn);
+      const whosTurn = boxInfo.getTheNextPlayerTurn(playerTurn);
       setPlayerTurn(whosTurn);
     } else {
 
       const boxIndex = clickedIndexes[0];
-      const box = (boxIndex || boxIndex === 0) ? getBoxNameByIndex(boxIndex) : false;
+      const box = (boxIndex || boxIndex === 0) ? boxInfo.getBoxNameByIndex(boxIndex) : false;
       const boxLineCount = box ? borders[box] : false;
       const boxAboutToScored = boxLineCount === 3;
 
       const adjBoxIndex = clickedIndexes[1];
-      const adjBox = (adjBoxIndex || adjBoxIndex === 0) ? getBoxNameByIndex(adjBoxIndex) : false;
+      const adjBox = (adjBoxIndex || adjBoxIndex === 0) ? boxInfo.getBoxNameByIndex(adjBoxIndex) : false;
       const adjBoxLineCount = adjBox ? borders[adjBox] : false;
       const adjBoxAboutToScored = adjBoxLineCount === 3;
 
@@ -229,22 +225,22 @@ const Game = () => {
   }
 
   const setSide = (boxName, side) => {
-    const temp = getTheNewBordAfterClickingSide(board, boxName, side);
+    const temp = boxInfo.getTheNewBordAfterClickingSide(board, boxName, side);
     setBoard(temp);
   }
 
   const clickBorder = (side, index, player) => {
     if(player !== playerTurn) return console.log("not your turn");
 
-    const boxName = getBoxNameByIndex(index);
-    const boxObj = getBoxObjByBoxName(board, boxName);
+    const boxName = boxInfo.getBoxNameByIndex(index);
+    const boxObj = boxInfo.getBoxObjByBoxName(board, boxName);
     const { disabled, borders } = boxObj;
-    if(!isClickable(borders, side)) return console.log("line not clickable");
+    if(!boxInfo.isClickable(borders, side)) return console.log("line not clickable");
 
     const { adjBoxSide, adjacentBoxIndex } = boxInfo.getAdjacentBoxInfo(board, side, index);
-    const adjBoxName = getBoxNameByIndex(adjacentBoxIndex);
+    const adjBoxName = boxInfo.getBoxNameByIndex(adjacentBoxIndex);
 
-    if(hasFootRestriction(footIndexes, index, adjacentBoxIndex)){
+    if(boxInfo.hasFootRestriction(footIndexes, index, adjacentBoxIndex)){
       console.log(index)
       return console.log("foot restriction")
     };
@@ -252,19 +248,19 @@ const Game = () => {
     setSide(boxName, side);
 
     const updatedConnections = [];
-    (!isDisabled(board, boxName)) && updatedConnections.push(index);
+    (!boxInfo.isDisabled(board, boxName)) && updatedConnections.push(index);
 
     if(adjacentBoxIndex || adjacentBoxIndex === 0){
       setSide(adjBoxName, adjBoxSide);
-      (!isDisabled(board, adjBoxName)) && updatedConnections.push(adjacentBoxIndex);
+      (!boxInfo.isDisabled(board, adjBoxName)) && updatedConnections.push(adjacentBoxIndex);
     }
 
     updatedConnections.length && adjustConnectedBoxes(updatedConnections);
     adjustBorderCount();
 
     const hasScored = boxInfo.hasScored(board, index, adjacentBoxIndex);
-    if((board[boxName] && !isDisabled(board, boxName)) ||
-      (board[adjBoxName] && !isDisabled(board, adjBoxName))){
+    if((board[boxName] && !boxInfo.isDisabled(board, boxName)) ||
+      (board[adjBoxName] && !boxInfo.isDisabled(board, adjBoxName))){
       setLineColor([index, adjacentBoxIndex], [side, adjBoxSide]);
       setTurnPlayer(hasScored, [index, adjacentBoxIndex]);
     }
@@ -293,7 +289,7 @@ const Game = () => {
   const setExplosionBoxes = (boxIndex) => {
     if(!activeBomb.length) return;
 
-    const temp = getLightPattern(explosions, activeBomb, boxIndex);
+    const temp = boxInfo.getLightPattern(explosions, activeBomb, boxIndex);
     setExplodingBoxes(temp);
 
     const temp2 = {...board}
@@ -304,11 +300,11 @@ const Game = () => {
 
     const bombType = explosionSides[activeBomb][`box${boxIndex}`];
     for(let side in bombType){
-      const sideIndex = getSideIndex(side);
+      const sideIndex = boxInfo.getSideIndex(side);
       bombType[side].forEach(rowBoxIndex => {
         temp2[`box${rowBoxIndex}`].borders[side] = null;
         temp3[`box${rowBoxIndex}`][side] = null;
-        temp5[`box${rowBoxIndex}`][sideIndex] = connectedBoxesObjRef[`box${rowBoxIndex}`][sideIndex];
+        temp5[`box${rowBoxIndex}`][sideIndex] = boxInfo.connectedBoxesObjRef[`box${rowBoxIndex}`][sideIndex];
         whoScored[`box${rowBoxIndex}`] = null;
 
         let newCount = temp4[`box${rowBoxIndex}`];
@@ -317,7 +313,7 @@ const Game = () => {
         }
         temp4[`box${rowBoxIndex}`] = newCount;
 
-        const boxName = getBoxNameByIndex(rowBoxIndex);
+        const boxName = boxInfo.getBoxNameByIndex(rowBoxIndex);
         if(computerLastLineClick.boxes && computerLastLineClick.boxes.includes(boxName)){
           const boxIndexInLastClicked = computerLastLineClick.boxes.indexOf(boxName);
           if(computerLastLineClick.sides[boxIndexInLastClicked] === side){
@@ -396,8 +392,8 @@ const Game = () => {
     if(levelText !== "x" || !levelText){
       setBoard(breakRefAndCopy(gameBoards[level]));
       setPlayerTurn("first");
-      setBorders(breakRefAndCopy(borderCount));
-      setConnectedBoxes(breakRefAndCopy(connectedBoxesObj));
+      setBorders(breakRefAndCopy(boxInfo.borderCount));
+      setConnectedBoxes(breakRefAndCopy(boxInfo.connectedBoxesObj));
       setWhoScored(breakRefAndCopy(whoScoredObj));
       setWhoClickedTheLineTracker(breakRefAndCopy(whoClickedTheLine));
       setComputerLastLineClick(false);
@@ -411,6 +407,11 @@ const Game = () => {
       setYouWin(false);
       setBoardTotalScore(getBoardScore(gameBoards[level]));
       setCurrentLevel(level);
+      if(informationBoard.includes(levelText)){
+        setShowInformativeScreen(true);
+        const type = informationText[`${levelText}`];
+        setInformationType(type)
+      }
     }
   }
 
@@ -429,6 +430,7 @@ const Game = () => {
   const startGame = () => {
     changeLevel("level1")
     setShowHomeScreen(false);
+    setShowBoard(true);
   }
 
   const motivationPage = () => {
@@ -439,89 +441,92 @@ const Game = () => {
     setShowHomeScreen(true);
   }
 
+  const closeInformationScreen = () => {
+    setShowInformativeScreen(false);
+  }
+
   return (<View style={styles.boardStyle}>
     <Image
       style={imgStyle}
       source={img}
     />
-    <GameScoreBoard
-      yourScore={yourScore}
-      computerScore={computerScore}
-      playerTurn={playerTurn}
-    />
-    {keys.map((data, index) => {
-      const {
-        disabled,
-        borders
-      } = board[data];
-      const {
-        isTopRightCornerBox,
-        isTopLeftCornerBox,
-        isBottomRightCornerBox,
-        isBottomLeftCornerBox,
-        isTopSideRow,
-        isRightSideRow,
-        isBottomSideRow,
-        isLeftSideRow
-      } = getSidesInfo(board, index);
-      const box = getBoxNameByIndex(index)
-      const isDisabledBox = disabled || false;
-      const hasScored = borders.top && borders.right && borders.bottom && borders.left;
-      const borderColors = boxInfo.getBorderColors(box, whoClickedTheLineTracker);
-      return (<GameBlock
-        isDisabledBox={isDisabledBox}
-        borders={borders}
-        clickBorder={clickBorder}
-        index={index}
-        hasScored={hasScored}
-        scored={whoScored[box]}
-        borderColors={borderColors}
-        computerLastLineClick={computerLastLineClick}
-        boxName={box}
-        isTopRightCornerBox={isTopRightCornerBox}
-        isTopLeftCornerBox={isTopLeftCornerBox}
-        isBottomRightCornerBox={isBottomRightCornerBox}
-        isBottomLeftCornerBox={isBottomLeftCornerBox}
-        isTopSideRow={isTopSideRow}
-        isRightSideRow={isRightSideRow}
-        isBottomSideRow={isBottomSideRow}
-        isLeftSideRow={isLeftSideRow}
-        explodingBoxes={explodingBoxes}
-        setExplosionBoxes={setExplosionBoxes}
-        footIndexes={footIndexes}
-        key={index} />)})}
-    <View
-      style={bombSection}
-    >
-
-    {chosenBombs.map((data, index) => {
-      let image;
-      let style;
-      if(data === "cheetah"){
-        image = cheetahImg;
-        style = explosionStlyes.generalBombStlyes();
-      } else if (data === "panther") {
-        image = pantherImg
-        style = explosionStlyes.generalBombStlyes();
-      } else if (data === "makeda") {
-        image = makedaImg;
-        style = explosionStlyes.makedaBombStyle();
-      }
-      return (<TouchableOpacity key={index} onPress={() => selectBomb(data)}>
-        <View style={activeBomb === data ? explosionStlyes.selectedBomb : {}}>
-          <Image
-            style={style}
-            source={image}
-          />
-        </View>
-      </TouchableOpacity>)
-    })}
-
-    </View>
-    <TouchableOpacity onPress={isDebuggingMode ? () => { checkComputerMove() } : () => {}}>
+    {showBoard &&
+      <GameScoreBoard
+        yourScore={yourScore}
+        computerScore={computerScore}
+        playerTurn={playerTurn}
+      />
+    }
+    {showBoard && keys.map((data, index) => {
+        const {
+          disabled,
+          borders
+        } = board[data];
+        const {
+          isTopRightCornerBox,
+          isTopLeftCornerBox,
+          isBottomRightCornerBox,
+          isBottomLeftCornerBox,
+          isTopSideRow,
+          isRightSideRow,
+          isBottomSideRow,
+          isLeftSideRow
+        } = boxInfo.getSidesInfo(board, index);
+        const box = boxInfo.getBoxNameByIndex(index)
+        const isDisabledBox = disabled || false;
+        const hasScored = borders.top && borders.right && borders.bottom && borders.left;
+        const borderColors = boxInfo.getBorderColors(box, whoClickedTheLineTracker);
+        return (<GameBlock
+          isDisabledBox={isDisabledBox}
+          borders={borders}
+          clickBorder={clickBorder}
+          index={index}
+          hasScored={hasScored}
+          scored={whoScored[box]}
+          borderColors={borderColors}
+          computerLastLineClick={computerLastLineClick}
+          boxName={box}
+          isTopRightCornerBox={isTopRightCornerBox}
+          isTopLeftCornerBox={isTopLeftCornerBox}
+          isBottomRightCornerBox={isBottomRightCornerBox}
+          isBottomLeftCornerBox={isBottomLeftCornerBox}
+          isTopSideRow={isTopSideRow}
+          isRightSideRow={isRightSideRow}
+          isBottomSideRow={isBottomSideRow}
+          isLeftSideRow={isLeftSideRow}
+          explodingBoxes={explodingBoxes}
+          setExplosionBoxes={setExplosionBoxes}
+          footIndexes={footIndexes}
+          key={index} />)})
+        }
+    {showBoard && <View style={bombSection} >
+      {chosenBombs.map((data, index) => {
+        let image;
+        let style;
+        if(data === "cheetah"){
+          image = cheetahImg;
+          style = explosionStlyes.generalBombStlyes();
+        } else if (data === "panther") {
+          image = pantherImg
+          style = explosionStlyes.generalBombStlyes();
+        } else if (data === "makeda") {
+          image = makedaImg;
+          style = explosionStlyes.makedaBombStyle();
+        }
+        return (<TouchableOpacity key={index} onPress={() => selectBomb(data)}>
+          <View style={activeBomb === data ? explosionStlyes.selectedBomb : {}}>
+            <Image
+              style={style}
+              source={image}
+            />
+          </View>
+        </TouchableOpacity>)
+      })}
+    </View>}
+    {showBoard && <TouchableOpacity onPress={isDebuggingMode ? () => { checkComputerMove() } : () => {}}>
       <Text style={{...openLevel, letterSpacing: 5}}>Levels</Text>
-    </TouchableOpacity>
-    <View style={levelSelectSection}>
+    </TouchableOpacity>}
+    {showBoard && <View style={levelSelectSection}>
       {levels.map((data, index) => {
         const levelStyle = (data === "x") ? lockedLevel : openLevel;
         const levelText = (data === "x") ? "x" : (index + 1);
@@ -540,7 +545,7 @@ const Game = () => {
           </View>
         </View>
       </TouchableOpacity>
-    </View>
+    </View>}
 
     {gameIsOver && !youWin &&
       <GameOver
@@ -557,6 +562,16 @@ const Game = () => {
     {showHomeScreen && <HomeScreen
       startGame={startGame}
       motivationPage={motivationPage}/>}
+
+    {showInformativeScreen && <InformativeScreen
+      facts={informationType}
+      close={closeInformationScreen}
+    />}
+
+    {viewPointer && <Pointer
+      bottomPosition={100}
+      leftPosition={100}
+    />}
 
   </View>)
 
