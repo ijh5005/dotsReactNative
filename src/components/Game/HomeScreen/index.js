@@ -61,7 +61,9 @@ const imgStyle = {
 }
 
 const HomeScreen = (props) => {
-  const {startGame, motivationPage} = props;
+  const {
+    startGame, motivationPage, storePage
+  } = props;
 
   return (<View style={{width, height, position: "absolute"}}>
     <Image
@@ -75,6 +77,9 @@ const HomeScreen = (props) => {
         </TouchableOpacity>
         <TouchableOpacity onPress={motivationPage}>
           <Text style={textBoxStlye("#b57800", 50)}>motivation</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={storePage}>
+          <Text style={textBoxStlye("#b57800", 50)}>store</Text>
         </TouchableOpacity>
       </View>
     </View>

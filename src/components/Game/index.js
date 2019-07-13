@@ -4,6 +4,8 @@ import GameBlock from "./GameBlock";
 import GameOver from "./GameOver";
 import YouWin from "./YouWin";
 import HomeScreen from "./HomeScreen";
+import MotivationScreen from "./MotivationScreen";
+import StoreScreen from "./StoreScreen";
 import InformativeScreen from "./InformativeScreen";
 import Pointer from "./Pointer";
 
@@ -12,7 +14,8 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Dimensions
+  Dimensions,
+  AsyncStorage
 } from "react-native";
 import { gameBoards } from "./GameBoards";
 import { boxInfo } from "./util/BoxInfo";
@@ -50,6 +53,8 @@ const Game = () => {
   const [youWin, setYouWin] = useState(false);
   const [boardTotalScore, setBoardTotalScore] = useState(util.getBoardScore(gameBoards[currentLevel]))
   const [showHomeScreen, setShowHomeScreen] = useState(true)
+  const [showMotivationScreen, setShowMotivationScreen] = useState(false)
+  const [showStoreScreen, setShowStoreScreen] = useState(false)
   const [showInformativeScreen, setShowInformativeScreen] = useState(false)
   const [informationType, setInformationType] = useState(null)
   const [viewPointer, setViewPointer] = useState(false);
@@ -334,7 +339,13 @@ const Game = () => {
   }
 
   const motivationPage = () => {
-    console.log("motivation page")
+    setShowHomeScreen(false);
+    setShowMotivationScreen(true);
+  }
+
+  const storePage = () => {
+    setShowHomeScreen(false);
+    setShowStoreScreen(true);
   }
 
   const homePage = () => {
@@ -461,7 +472,14 @@ const Game = () => {
 
     {showHomeScreen && <HomeScreen
       startGame={startGame}
-      motivationPage={motivationPage}/>}
+      motivationPage={motivationPage}
+      storePage={storePage}/>}
+
+    {showMotivationScreen && <MotivationScreen
+    />}
+
+    {showStoreScreen && <StoreScreen
+    />}
 
     {showInformativeScreen && <InformativeScreen
       facts={informationType}
