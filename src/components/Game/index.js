@@ -15,9 +15,9 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  AsyncStorage,
   Animated
 } from "react-native";
+import AsyncStorage from '@react-native-community/async-storage';
 import { gameBoards } from "./GameBoards";
 import { boxInfo } from "./util/BoxInfo";
 import { computerMove } from "./util/ComputerLogic";
@@ -60,8 +60,7 @@ const Game = () => {
   const [informationType, setInformationType] = useState(null)
   const [viewPointer, setViewPointer] = useState(false);
   const [showBoard, setShowBoard] = useState(false);
-
-  let chosenBombs = ["cheetah", "panther", "makeda"];
+  const [currentLevelBombs, setCurrentLevelBombs] = useState([]);
 
   const checkComputerMove = () => {
     debugger
@@ -112,6 +111,42 @@ const Game = () => {
       setGameOver(true)
     }
   }, [whoScored])
+
+  const clearAllStorage = async () => {
+    await AsyncStorage.clear()
+  }
+
+  // clearAllStorage();
+
+  useEffect(() => {
+    if(gameIsOver && youWin){
+
+      const checkLevelDefaults = async () => {
+
+        try {
+          const allStorage = await AsyncStorage.getAllKeys();
+          if(allStorage.includes("completedLevels")){
+            const completedLevels = JSON.parse(await AsyncStorage.getItem("completedLevels"));
+            if(!completedLevels.includes(currentLevel)){
+              completedLevels.push(currentLevel);
+              await AsyncStorage.removeItem("completedLevels");
+              await AsyncStorage.setItem("completedLevels", JSON.stringify(completedLevels));
+            }
+          } else {
+            await AsyncStorage.setItem("completedLevels", JSON.stringify([currentLevel]));
+          }
+          const finalStorage = await AsyncStorage.getItem("completedLevels")
+          console.log(finalStorage)
+        } catch (e) {
+          console.log("local storage error")
+        }
+
+      }
+
+      checkLevelDefaults();
+
+    }
+  }, [gameIsOver, youWin])
 
   const adjustBorderCount = () => {
     // get the new incremented border counts
@@ -385,6 +420,22 @@ const Game = () => {
     outputRange: [ 'transparent', '#b57800' ]
   });
 
+  const setDefaultBombs = async () => {
+    const allStorage = await AsyncStorage.getAllKeys();
+    if(allStorage.includes("completedLevels")){
+      const completedLevels = JSON.parse(await AsyncStorage.getItem("completedLevels"));
+      if(completedLevels.includes(currentLevel)){
+        setCurrentLevelBombs([])
+      } else {
+        setCurrentLevelBombs(settings.levelDefaultBombs[currentLevel])
+      }
+    } else {
+      setCurrentLevelBombs(settings.levelDefaultBombs[currentLevel])
+    }
+  }
+
+  setDefaultBombs();
+
   return (<View style={styles.boardStyle(height, width)}>
     <Image
       style={styles.imgStyle(height, width)}
@@ -440,7 +491,7 @@ const Game = () => {
         key={index} />)})
       }
     {showBoard && <View style={styles.bombSection(width)} >
-      {chosenBombs.map((data, index) => {
+      {currentLevelBombs.map((data, index) => {
         let image;
         let style;
         if(data === "cheetah"){
