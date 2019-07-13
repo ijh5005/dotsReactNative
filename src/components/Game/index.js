@@ -358,47 +358,47 @@ const Game = () => {
       />
     }
     {showBoard && keys.map((data, index) => {
-        const {
-          disabled,
-          borders
-        } = board[data];
-        const {
-          isTopRightCornerBox,
-          isTopLeftCornerBox,
-          isBottomRightCornerBox,
-          isBottomLeftCornerBox,
-          isTopSideRow,
-          isRightSideRow,
-          isBottomSideRow,
-          isLeftSideRow
-        } = boxInfo.getSidesInfo(board, index);
-        const box = boxInfo.getBoxNameByIndex(index)
-        const isDisabledBox = disabled || false;
-        const hasScored = borders.top && borders.right && borders.bottom && borders.left;
-        const borderColors = boxInfo.getBorderColors(box, whoClickedTheLineTracker);
-        return (<GameBlock
-          isDisabledBox={isDisabledBox}
-          borders={borders}
-          clickBorder={clickBorder}
-          index={index}
-          hasScored={hasScored}
-          scored={whoScored[box]}
-          borderColors={borderColors}
-          computerLastLineClick={computerLastLineClick}
-          boxName={box}
-          isTopRightCornerBox={isTopRightCornerBox}
-          isTopLeftCornerBox={isTopLeftCornerBox}
-          isBottomRightCornerBox={isBottomRightCornerBox}
-          isBottomLeftCornerBox={isBottomLeftCornerBox}
-          isTopSideRow={isTopSideRow}
-          isRightSideRow={isRightSideRow}
-          isBottomSideRow={isBottomSideRow}
-          isLeftSideRow={isLeftSideRow}
-          explodingBoxes={explodingBoxes}
-          setExplosionBoxes={setExplosionBoxes}
-          footIndexes={footIndexes}
-          key={index} />)})
-        }
+      const {
+        disabled,
+        borders
+      } = board[data];
+      const {
+        isTopRightCornerBox,
+        isTopLeftCornerBox,
+        isBottomRightCornerBox,
+        isBottomLeftCornerBox,
+        isTopSideRow,
+        isRightSideRow,
+        isBottomSideRow,
+        isLeftSideRow
+      } = boxInfo.getSidesInfo(board, index);
+      const box = boxInfo.getBoxNameByIndex(index)
+      const isDisabledBox = disabled || false;
+      const hasScored = borders.top && borders.right && borders.bottom && borders.left;
+      const borderColors = boxInfo.getBorderColors(box, whoClickedTheLineTracker);
+      return (<GameBlock
+        isDisabledBox={isDisabledBox}
+        borders={borders}
+        clickBorder={clickBorder}
+        index={index}
+        hasScored={hasScored}
+        scored={whoScored[box]}
+        borderColors={borderColors}
+        computerLastLineClick={computerLastLineClick}
+        boxName={box}
+        isTopRightCornerBox={isTopRightCornerBox}
+        isTopLeftCornerBox={isTopLeftCornerBox}
+        isBottomRightCornerBox={isBottomRightCornerBox}
+        isBottomLeftCornerBox={isBottomLeftCornerBox}
+        isTopSideRow={isTopSideRow}
+        isRightSideRow={isRightSideRow}
+        isBottomSideRow={isBottomSideRow}
+        isLeftSideRow={isLeftSideRow}
+        explodingBoxes={explodingBoxes}
+        setExplosionBoxes={setExplosionBoxes}
+        footIndexes={footIndexes}
+        key={index} />)})
+      }
     {showBoard && <View style={styles.bombSection(width)} >
       {chosenBombs.map((data, index) => {
         let image;
