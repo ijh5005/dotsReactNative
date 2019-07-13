@@ -1,4 +1,12 @@
 import React, { useState, useEffect } from "react";
+import GameScoreBoard from "./GameScoreBoard";
+import GameBlock from "./GameBlock";
+import GameOver from "./GameOver";
+import YouWin from "./YouWin";
+import HomeScreen from "./HomeScreen";
+import InformativeScreen from "./InformativeScreen";
+import Pointer from "./Pointer";
+
 import {
   View,
   Text,
@@ -11,54 +19,26 @@ import { boxInfo } from "./util/BoxInfo";
 import { computerMove } from "./util/ComputerLogic";
 import { whoClickedTheLine } from "./util/WhoClicked";
 import { whoScoredObj } from "./util/WhoScored";
-import {
-  explosions,
-  explosionSides
-} from "./util/ExplosionPattern";
+import { explosions, explosionSides } from "./util/ExplosionPattern";
 import { explosionStlyes } from "./util/ExplosionStlyes";
-
-import GameScoreBoard from "./GameScoreBoard";
-import GameBlock from "./GameBlock";
-import GameOver from "./GameOver";
-import YouWin from "./YouWin";
-import HomeScreen from "./HomeScreen";
-import InformativeScreen from "./InformativeScreen";
-import Pointer from "./Pointer";
-
+import { settings } from "./util/Settings";
+import { images } from "./util/Images";
+import { util } from "./util/Util";
+import { styles } from "./util/Styles";
 import { footSquares } from "./FootSquares";
 
-const img = require("../../imgs/bkImg.png");
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-const finalLevel = "level8";
-
-const cheetahImg = require("../../imgs/asset_cheetah.png");
-const pantherImg = require("../../imgs/asset_panther.png");
-const makedaImg = require("../../imgs/asset_queen_makeda.png");
-
 const Game = () => {
 
-  const breakRefAndCopy = (obj) => {
-    return JSON.parse(JSON.stringify(obj));
-  }
-  const getBoardScore = (board) => {
-    let totalScore = 0;
-    for(let box in board){
-      if(!board[box].disabled){
-        totalScore++;
-      }
-    }
-    return totalScore;
-  }
-
   const [currentLevel, setCurrentLevel] = useState("level1");
-  const [board, setBoard] = useState(breakRefAndCopy(gameBoards[currentLevel]));
+  const [board, setBoard] = useState(util.breakRefAndCopy(gameBoards[currentLevel]));
   const [playerTurn, setPlayerTurn] = useState("first");
-  const [borders, setBorders] = useState(breakRefAndCopy(boxInfo.borderCount));
-  const [connectedBoxes, setConnectedBoxes] = useState(breakRefAndCopy(boxInfo.connectedBoxesObj));
-  const [whoScored, setWhoScored] = useState(breakRefAndCopy(whoScoredObj));
-  const [whoClickedTheLineTracker, setWhoClickedTheLineTracker] = useState(breakRefAndCopy(whoClickedTheLine));
+  const [borders, setBorders] = useState(util.breakRefAndCopy(boxInfo.borderCount));
+  const [connectedBoxes, setConnectedBoxes] = useState(util.breakRefAndCopy(boxInfo.connectedBoxesObj));
+  const [whoScored, setWhoScored] = useState(util.breakRefAndCopy(whoScoredObj));
+  const [whoClickedTheLineTracker, setWhoClickedTheLineTracker] = useState(util.breakRefAndCopy(whoClickedTheLine));
   const [computerLastLineClick, setComputerLastLineClick] = useState(false);
   const [yourScore, setYourScore] = useState(0);
   const [computerScore, setComputerScore] = useState(0);
@@ -68,22 +48,15 @@ const Game = () => {
   const [footIndexes, setFootIndexes] = useState(footSquares[currentLevel]);
   const [gameIsOver, setGameIsOver] = useState(false);
   const [youWin, setYouWin] = useState(false);
-  const [boardTotalScore, setBoardTotalScore] = useState(getBoardScore(gameBoards[currentLevel]))
+  const [boardTotalScore, setBoardTotalScore] = useState(util.getBoardScore(gameBoards[currentLevel]))
   const [showHomeScreen, setShowHomeScreen] = useState(true)
   const [showInformativeScreen, setShowInformativeScreen] = useState(false)
   const [informationType, setInformationType] = useState(null)
   const [viewPointer, setViewPointer] = useState(false);
   const [showBoard, setShowBoard] = useState(false);
 
-  const informationBoard = [2, 6];
-  const informationText = {
-    "2": "foot",
-    "6": "makeda"
-  }
-
   let chosenBombs = ["cheetah", "panther", "makeda"];
 
-  const isDebuggingMode = true;
   const checkComputerMove = () => {
     debugger
     const move = computerMove(borders, connectedBoxes, board, footIndexes);
@@ -133,18 +106,6 @@ const Game = () => {
       setGameOver(true)
     }
   }, [whoScored])
-
-  // styles for the game
-  const styles = {
-    boardStyle: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "center",
-      alignItems: "center",
-      height,
-      width
-    }
-  }
 
   const adjustBorderCount = () => {
     // get the new incremented border counts
@@ -268,24 +229,6 @@ const Game = () => {
 
   const keys = Object.keys(board);
 
-  const imgStyle = {
-    width,
-    height,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    paddingTop: 40
-  }
-
-  const bombSection = {
-    height: 100,
-    width,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 25
-  }
-
   const setExplosionBoxes = (boxIndex) => {
     if(!activeBomb.length) return;
 
@@ -345,71 +288,28 @@ const Game = () => {
     setActiveBomb(bomb)
   }
 
-  const levelSelectSection = {
-    width,
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    flexWrap: "wrap"
-  }
-
-  const levelBox = {
-    height: 50,
-    width: 50,
-    backgroundColor: "#270038",
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-    margin: 5
-  }
-
-  const homeBox = {
-    height: 50,
-    width: 100,
-    backgroundColor: "#270038",
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-    margin: 5
-  }
-
-  const levels = [1, 2, 3, 4, 5, 6, 7, 8];
-
-  const openLevel = {
-    fontSize: 20,
-    color: "#b57800"
-  }
-
-  const lockedLevel = {
-    fontSize: 20,
-    color: "#fff",
-    padding: 2,
-    opacity: 0.6,
-    fontWeight: "bold"
-  }
-
   const changeLevel = (level, levelText) => {
     if(levelText !== "x" || !levelText){
-      setBoard(breakRefAndCopy(gameBoards[level]));
+      setBoard(util.breakRefAndCopy(gameBoards[level]));
       setPlayerTurn("first");
-      setBorders(breakRefAndCopy(boxInfo.borderCount));
-      setConnectedBoxes(breakRefAndCopy(boxInfo.connectedBoxesObj));
-      setWhoScored(breakRefAndCopy(whoScoredObj));
-      setWhoClickedTheLineTracker(breakRefAndCopy(whoClickedTheLine));
+      setBorders(util.breakRefAndCopy(boxInfo.borderCount));
+      setConnectedBoxes(util.breakRefAndCopy(boxInfo.connectedBoxesObj));
+      setWhoScored(util.breakRefAndCopy(whoScoredObj));
+      setWhoClickedTheLineTracker(util.breakRefAndCopy(whoClickedTheLine));
       setComputerLastLineClick(false);
       setYourScore(0);
       setComputerScore(0);
       setGameOver(false);
       setExplodingBoxes({});
       setActiveBomb("");
-      setFootIndexes(breakRefAndCopy(footSquares[level]));
+      setFootIndexes(util.breakRefAndCopy(footSquares[level]));
       setGameIsOver(false);
       setYouWin(false);
-      setBoardTotalScore(getBoardScore(gameBoards[level]));
+      setBoardTotalScore(util.getBoardScore(gameBoards[level]));
       setCurrentLevel(level);
-      if(informationBoard.includes(levelText)){
+      if(settings.informationBoard.includes(levelText)){
         setShowInformativeScreen(true);
-        const type = informationText[`${levelText}`];
+        const type = settings.informationText[`${levelText}`];
         setInformationType(type)
       }
     }
@@ -445,10 +345,10 @@ const Game = () => {
     setShowInformativeScreen(false);
   }
 
-  return (<View style={styles.boardStyle}>
+  return (<View style={styles.boardStyle(height, width)}>
     <Image
-      style={imgStyle}
-      source={img}
+      style={styles.imgStyle(height, width)}
+      source={images.background}
     />
     {showBoard &&
       <GameScoreBoard
@@ -499,18 +399,18 @@ const Game = () => {
           footIndexes={footIndexes}
           key={index} />)})
         }
-    {showBoard && <View style={bombSection} >
+    {showBoard && <View style={styles.bombSection(width)} >
       {chosenBombs.map((data, index) => {
         let image;
         let style;
         if(data === "cheetah"){
-          image = cheetahImg;
+          image = images.cheetahImg;
           style = explosionStlyes.generalBombStlyes();
         } else if (data === "panther") {
-          image = pantherImg
+          image = images.pantherImg
           style = explosionStlyes.generalBombStlyes();
         } else if (data === "makeda") {
-          image = makedaImg;
+          image = images.makedaImg;
           style = explosionStlyes.makedaBombStyle();
         }
         return (<TouchableOpacity key={index} onPress={() => selectBomb(data)}>
@@ -523,15 +423,15 @@ const Game = () => {
         </TouchableOpacity>)
       })}
     </View>}
-    {showBoard && <TouchableOpacity onPress={isDebuggingMode ? () => { checkComputerMove() } : () => {}}>
-      <Text style={{...openLevel, letterSpacing: 5}}>Levels</Text>
+    {showBoard && <TouchableOpacity onPress={settings.isDebuggingMode ? () => { checkComputerMove() } : () => {}}>
+      <Text style={{...styles.openLevel, letterSpacing: 5}}>Levels</Text>
     </TouchableOpacity>}
-    {showBoard && <View style={levelSelectSection}>
-      {levels.map((data, index) => {
-        const levelStyle = (data === "x") ? lockedLevel : openLevel;
+    {showBoard && <View style={styles.levelSelectSection(width)}>
+      {settings.levels.map((data, index) => {
+        const levelStyle = (data === "x") ? styles.lockedLevel : styles.openLevel;
         const levelText = (data === "x") ? "x" : (index + 1);
         return (<TouchableOpacity key={index} onPress={changeLevel.bind(this, `level${index + 1}`, levelText)}>
-          <View style={levelBox}>
+          <View style={styles.levelBox}>
             <View style={levelStyle}>
               <Text style={levelStyle}>{levelText}</Text>
             </View>
@@ -539,9 +439,9 @@ const Game = () => {
         </TouchableOpacity>)
       })}
       <TouchableOpacity onPress={homePage}>
-        <View style={homeBox}>
-          <View style={openLevel}>
-            <Text style={openLevel}>Home</Text>
+        <View style={styles.homeBox}>
+          <View style={styles.openLevel}>
+            <Text style={styles.openLevel}>Home</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -556,7 +456,7 @@ const Game = () => {
       <YouWin
         restartGame={restartGame}
         nextLevel={nextLevel}
-        isLastBoard={currentLevel === finalLevel}
+        isLastBoard={currentLevel === settings.finalLevel}
       />}
 
     {showHomeScreen && <HomeScreen
