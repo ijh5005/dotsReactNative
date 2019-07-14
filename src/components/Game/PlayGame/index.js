@@ -1,4 +1,15 @@
 import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  Animated,
+  StyleSheet
+} from "react-native";
+import AsyncStorage from '@react-native-community/async-storage';
+
 import GameScoreBoard from "../GameScoreBoard";
 import GameBlock from "../GameBlock";
 import GameOver from "../GameOver";
@@ -6,15 +17,6 @@ import YouWin from "../YouWin";
 import InformativeScreen from "../InformativeScreen";
 import Pointer from "../Pointer";
 
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-  Animated
-} from "react-native";
-import AsyncStorage from '@react-native-community/async-storage';
 import { gameBoards } from "../GameBoards";
 import { boxInfo } from "../util/BoxInfo";
 import { computerMove } from "../util/ComputerLogic";
@@ -25,7 +27,6 @@ import { explosionStlyes } from "../util/ExplosionStlyes";
 import { settings } from "../util/Settings";
 import { images } from "../util/Images";
 import { util } from "../util/Util";
-import { styles } from "../util/Styles";
 import { footSquares } from "../FootSquares";
 
 var width = Dimensions.get('window').width; //full width
@@ -139,10 +140,7 @@ const PlayGame = (props) => {
   }, [gameIsOver, youWin])
 
   const adjustBorderCount = () => {
-    // get the new incremented border counts
-    // const temp = boxInfo.getNewBorderCounts(borders, boxIndex);
     const temp = boxInfo.getBorderCounts(board);
-    // set the new borders
     setBorders({ ...temp });
   }
 
@@ -404,17 +402,15 @@ const PlayGame = (props) => {
     navigate("Home");
   }
 
-  return (<View style={styles.boardStyle(height, width)}>
-    <Image
-      style={styles.imgStyle(height, width)}
-      source={images.background}
-    />
+  return (<View style={styles.boardStyle}>
+    <Image style={styles.imgStyle} source={images.background} />
 
     <GameScoreBoard
       yourScore={yourScore}
       computerScore={computerScore}
       playerTurn={playerTurn}
     />
+
     {keys.map((data, index) => {
       const {
         disabled,
@@ -455,9 +451,9 @@ const PlayGame = (props) => {
         explodingBoxes={explodingBoxes}
         setExplosionBoxes={setExplosionBoxes}
         footIndexes={footIndexes}
-        key={index} />)})
-      }
-    <View style={styles.bombSection(width)} >
+        key={index} />)})}
+
+    <View style={styles.bombSection} >
       {currentLevelBombs.map((data, index) => {
         let image;
         let style;
@@ -481,19 +477,17 @@ const PlayGame = (props) => {
         </TouchableOpacity>)
       })}
     </View>
+
     <TouchableOpacity
-      style={{flexDirection: "row", justifyContent: "center", alignItems: "center"}}
+      style={styles.goldSection}
       onPress={settings.isDebuggingMode ? () => { checkComputerMove() } : () => {}}>
-      <Text style={{...styles.openLevel, letterSpacing: 5}}>1000</Text>
-      <View style={{height: 60, width: 60, justifyContent: "center", alignItems: "center"}}>
-        <Image
-          style={{flex:1, height: "100%", width: "100%"}}
-          source={images.goldBlock}
-          resizeMode="contain"
-        />
+      <Text style={styles.goldText}>1000</Text>
+      <View style={styles.gold}>
+        <Image style={styles.goldImg} source={images.goldBlock} resizeMode="contain" />
       </View>
     </TouchableOpacity>
-    <View style={styles.levelSelectSection(width)}>
+
+    <View style={styles.levelSelectSection}>
       {settings.levels.map((data, index) => {
         const levelStyle = (data === "x") ? styles.lockedLevel : styles.openLevel;
         const levelText = (data === "x") ? "x" : (index + 1);
@@ -536,3 +530,86 @@ const PlayGame = (props) => {
 }
 
 export default PlayGame;
+
+const styles = StyleSheet.create({
+  boardStyle: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    height,
+    width
+  },
+  imgStyle: {
+    width,
+    height,
+    position: "absolute",
+    top: 0,
+    left: 0
+  },
+  openLevel: {
+    fontSize: 20,
+    color: "#b57800"
+  },
+  lockedLevel: {
+    fontSize: 20,
+    color: "#fff",
+    padding: 2,
+    opacity: 0.6,
+    fontWeight: "bold"
+  },
+  bombSection: {
+    height: 100,
+    width,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10
+  },
+  levelSelectSection: {
+    width,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    flexWrap: "wrap"
+  },
+  levelBox: {
+    height: 50,
+    width: 50,
+    backgroundColor: "#270038",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 5
+  },
+  homeBox: {
+    height: 50,
+    width: 100,
+    backgroundColor: "#270038",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 5
+  },
+  goldSection: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  goldText: {
+    fontSize: 20,
+    color: "#b57800",
+    letterSpacing: 5
+  },
+  gold: {
+    height: 60,
+    width: 60,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  goldImg: {
+    flex:1,
+    height: "100%",
+    width: "100%"
+  }
+});
