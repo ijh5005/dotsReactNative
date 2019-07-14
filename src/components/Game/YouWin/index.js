@@ -3,32 +3,16 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   Dimensions,
-  Animated
+  Animated,
+  StyleSheet
 } from "react-native";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-const textSectionStlye = (width) => {
-  return {
-    backgroundColor: "#270038",
-    width,
-    height: 220,
-    position: "absolute",
-    top: "20%",
-    justifyContent: "center",
-    alignItems: "center"
-  }
-}
-
 const textBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
-  return {
-    color,
-    fontSize,
-    opacity
-  }
+  return
 }
 
 const GameOver = (props) => {
@@ -48,15 +32,27 @@ const GameOver = (props) => {
     { toValue: 0, duration: 500 }
   ).start();
 
-  return (<Animated.View style={{width, height, position: "absolute", top , left: 0, backgroundColor: "rgba(39, 0, 56, 0.6)", opacity}}>
-    <View style={textSectionStlye(width)}>
-      <Text style={textBoxStlye("#2e8b57", 20, 1)}>YOU WIN!</Text>
+  const youWinStyle = (top, opacity) => {
+    return {
+      width,
+      height,
+      position: "absolute",
+      top ,
+      left: 0,
+      backgroundColor: "rgba(39, 0, 56, 0.6)",
+      opacity
+    }
+  }
+
+  return (<Animated.View style={youWinStyle(top, opacity)}>
+    <View style={styles.textSectionStlye}>
+      <Text style={styles.youWin}>YOU WIN!</Text>
       <TouchableOpacity onPress={restartGame}>
-        <Text style={textBoxStlye("#fff", 40, 0.6)}>RETRY</Text>
+        <Text style={styles.retry}>RETRY</Text>
       </TouchableOpacity>
       { !isLastBoard &&
         <TouchableOpacity onPress={nextLevel}>
-          <Text style={textBoxStlye("#fff", 40, 0.6)}>NEXT LEVEL</Text>
+          <Text style={styles.nextLevel}>NEXT LEVEL</Text>
         </TouchableOpacity>
       }
     </View>
@@ -64,3 +60,30 @@ const GameOver = (props) => {
 }
 
 export default GameOver;
+
+const styles = StyleSheet.create({
+  textSectionStlye: {
+    backgroundColor: "#270038",
+    width,
+    height: 220,
+    position: "absolute",
+    top: "20%",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  youWin: {
+    color: "#2e8b57",
+    fontSize: 20,
+    opacity: 1
+  },
+  retry: {
+    color: "#fff",
+    fontSize: 40,
+    opacity: 0.6
+  },
+  nextLevel: {
+    color: "#fff",
+    fontSize: 40,
+    opacity: 0.6
+  }
+});

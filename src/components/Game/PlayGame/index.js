@@ -154,7 +154,7 @@ const PlayGame = (props) => {
       }
     }
     setDefaultBombs();
-  }, [])
+  }, [currentLevel])
 
   const adjustBorderCount = () => {
     const temp = boxInfo.getBorderCounts(board);
