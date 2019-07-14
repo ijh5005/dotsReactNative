@@ -17,9 +17,7 @@ const Game = (props) => {
   const storePage = () => navigate("Store");
 
   return (<View style={styles.boardStyle}>
-    <Image
-      style={styles.imgStyle}
-      source={images.background}/>
+    <Image style={styles.imgStyle} source={images.background} />
 
     <HomeScreen
       startGame={startGame}
