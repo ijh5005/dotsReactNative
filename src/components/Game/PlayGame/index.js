@@ -139,6 +139,23 @@ const PlayGame = (props) => {
     }
   }, [gameIsOver, youWin])
 
+  useEffect(() => {
+    const setDefaultBombs = async () => {
+      const allStorage = await AsyncStorage.getAllKeys();
+      if(allStorage.includes("completedLevels")){
+        const completedLevels = JSON.parse(await AsyncStorage.getItem("completedLevels"));
+        if(completedLevels.includes(currentLevel)){
+          setCurrentLevelBombs([])
+        } else {
+          setCurrentLevelBombs(settings.levelDefaultBombs[currentLevel])
+        }
+      } else {
+        setCurrentLevelBombs(settings.levelDefaultBombs[currentLevel])
+      }
+    }
+    setDefaultBombs();
+  }, [])
+
   const adjustBorderCount = () => {
     const temp = boxInfo.getBorderCounts(board);
     setBorders({ ...temp });
@@ -382,26 +399,6 @@ const PlayGame = (props) => {
     outputRange: [ 'transparent', '#b57800' ]
   });
 
-  const setDefaultBombs = async () => {
-    const allStorage = await AsyncStorage.getAllKeys();
-    if(allStorage.includes("completedLevels")){
-      const completedLevels = JSON.parse(await AsyncStorage.getItem("completedLevels"));
-      if(completedLevels.includes(currentLevel)){
-        setCurrentLevelBombs([])
-      } else {
-        setCurrentLevelBombs(settings.levelDefaultBombs[currentLevel])
-      }
-    } else {
-      setCurrentLevelBombs(settings.levelDefaultBombs[currentLevel])
-    }
-  }
-
-  setDefaultBombs();
-
-  const homePage = () => {
-    navigate("Home");
-  }
-
   return (<View style={styles.boardStyle}>
     <Image style={styles.imgStyle} source={images.background} />
 
@@ -482,7 +479,7 @@ const PlayGame = (props) => {
 
     <TouchableOpacity
       style={styles.goldSection}
-      onPress={settings.isDebuggingMode ? () => { checkComputerMove() } : () => {}}>
+      onPress={settings.isDebuggingMode ? () => { checkComputerMove() } : null}>
       <Text style={styles.goldText}>1000</Text>
       <View style={styles.gold}>
         <Image style={styles.goldImg} source={images.goldBlock} resizeMode="contain" />
@@ -501,13 +498,6 @@ const PlayGame = (props) => {
           </View>
         </TouchableOpacity>)
       })}
-      <TouchableOpacity onPress={homePage}>
-        <View style={styles.homeBox}>
-          <View style={styles.openLevel}>
-            <Text style={styles.openLevel}>Home</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
     </View>
 
     {gameIsOver && !youWin &&
@@ -523,9 +513,9 @@ const PlayGame = (props) => {
       />}
 
     {showInformativeScreen && <InformativeScreen
-      facts={informationType}
-      close={closeInformationScreen}
-    />}
+        facts={informationType}
+        close={closeInformationScreen}
+      />}
 
   </View>)
 
@@ -561,7 +551,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   bombSection: {
-    height: 100,
+    height: 60,
     width,
     flexDirection: "row",
     justifyContent: "center",
@@ -569,7 +559,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   levelSelectSection: {
-    width,
+    width: width * .8,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
