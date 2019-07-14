@@ -411,6 +411,8 @@ const PlayGame = (props) => {
       playerTurn={playerTurn}
     />
 
+    <View style={styles.space}></View>
+
     {keys.map((data, index) => {
       const {
         disabled,
@@ -611,5 +613,9 @@ const styles = StyleSheet.create({
     flex:1,
     height: "100%",
     width: "100%"
+  },
+  space: {
+    height: 20,
+    width
   }
 });

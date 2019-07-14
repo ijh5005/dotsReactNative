@@ -3,8 +3,11 @@ import {
   View,
   Text,
   Animated,
+  Dimensions,
   StyleSheet
 } from "react-native";
+
+var width = Dimensions.get('window').width; //full width
 
 const GameScoreBoard = (props) => {
 
