@@ -13,9 +13,12 @@ import { images } from "../util/Images";
 
 import { introMusic } from "../Sounds";
 
-setTimeout(() => {
-  // introMusic.play()
-}, 2000)
+const playGameMusic = () => {
+  setTimeout(() => {
+    // introMusic.play()
+  }, 2000)
+}
+playGameMusic();
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
