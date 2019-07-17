@@ -9,3 +9,4 @@ export const score = new Sound('./score.mp3', Sound.MAIN_BUNDLE, error);
 export const iseeu = new Sound('./iseeu.mp3', Sound.MAIN_BUNDLE, error);
 export const gotem = new Sound('./gotem.mp3', Sound.MAIN_BUNDLE, error);
 export const okay = new Sound('./okay.mp3', Sound.MAIN_BUNDLE, error);
+export const wrong = new Sound('./wrong.wav', Sound.MAIN_BUNDLE, error);

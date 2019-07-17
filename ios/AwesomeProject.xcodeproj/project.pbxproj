@@ -53,6 +53,7 @@
 		611F92F822DFD64D00CD1390 /* iseeu.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 611F92F722DFD64D00CD1390 /* iseeu.mp3 */; };
 		611F92FA22DFD6CA00CD1390 /* gotem.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 611F92F922DFD6CA00CD1390 /* gotem.mp3 */; };
 		611F92FC22DFD6D500CD1390 /* okay.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 611F92FB22DFD6D500CD1390 /* okay.mp3 */; };
+		611F92FE22DFE3B900CD1390 /* wrong.wav in Resources */ = {isa = PBXBuildFile; fileRef = 611F92FD22DFE3B900CD1390 /* wrong.wav */; };
 		7001AB3BF02445969F6D7B21 /* Raleway-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97637EA6E585498098A93325 /* Raleway-Medium.ttf */; };
 		72079A81AC084429B9BE1D0B /* Raleway-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 76AAF45D21FD4460878C6409 /* Raleway-BlackItalic.ttf */; };
 		7DB6D4FC498B4E0999B05C6F /* Raleway-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 427DE9810EB3435F80DF5137 /* Raleway-ExtraBoldItalic.ttf */; };
@@ -421,6 +422,7 @@
 		611F92F722DFD64D00CD1390 /* iseeu.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = iseeu.mp3; path = ../src/components/Game/Sounds/iseeu.mp3; sourceTree = "<group>"; };
 		611F92F922DFD6CA00CD1390 /* gotem.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = gotem.mp3; path = ../src/components/Game/Sounds/gotem.mp3; sourceTree = "<group>"; };
 		611F92FB22DFD6D500CD1390 /* okay.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = okay.mp3; path = ../src/components/Game/Sounds/okay.mp3; sourceTree = "<group>"; };
+		611F92FD22DFE3B900CD1390 /* wrong.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = wrong.wav; path = ../src/components/Game/Sounds/wrong.wav; sourceTree = "<group>"; };
 		665D47214B1E4B7590FC2550 /* Raleway-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-LightItalic.ttf"; path = "../src/Raleway/Raleway-LightItalic.ttf"; sourceTree = "<group>"; };
 		76AAF45D21FD4460878C6409 /* Raleway-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-BlackItalic.ttf"; path = "../src/Raleway/Raleway-BlackItalic.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -714,6 +716,7 @@
 			children = (
 				611F92EA22DE913600CD1390 /* inGameMusic.mp3 */,
 				611F92E922DE913600CD1390 /* introMusic.mp3 */,
+				611F92FD22DFE3B900CD1390 /* wrong.wav */,
 				611F92EF22DE981C00CD1390 /* lineClick.wav */,
 				611F92FB22DFD6D500CD1390 /* okay.mp3 */,
 				611F92F922DFD6CA00CD1390 /* gotem.mp3 */,
@@ -1271,6 +1274,7 @@
 				1F9FBAFAD7E54B85B8AAA850 /* Raleway-ExtraBold.ttf in Resources */,
 				7DB6D4FC498B4E0999B05C6F /* Raleway-ExtraBoldItalic.ttf in Resources */,
 				ACEAC1F93FF54F3F99B2693E /* Raleway-ExtraLight.ttf in Resources */,
+				611F92FE22DFE3B900CD1390 /* wrong.wav in Resources */,
 				611F92F122DE981C00CD1390 /* lineClick.wav in Resources */,
 				1F39B7D3BC19445DA62E3657 /* Raleway-ExtraLightItalic.ttf in Resources */,
 				AC7497DB8CAD4FD6BD75CD50 /* Raleway-Italic.ttf in Resources */,

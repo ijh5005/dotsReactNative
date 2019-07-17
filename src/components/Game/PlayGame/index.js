@@ -35,7 +35,8 @@ import {
   score,
   iseeu,
   okay,
-  inGameMusic
+  inGameMusic,
+  wrong
 } from "../Sounds";
 
 var width = Dimensions.get('window').width; //full width
@@ -289,22 +290,30 @@ const PlayGame = (props) => {
   const clickBorder = (side, index, player) => {
     if(!passedMoveRestrictions()) return;
 
-    if(player !== playerTurn) return console.log("not your turn");
+    if(player !== playerTurn){
+      wrong.setCurrentTime(0);
+      return wrong.play()
+    }
 
     lineClick.setCurrentTime(0);
-    lineClick.play();
 
     const boxName = boxInfo.getBoxNameByIndex(index);
     const boxObj = boxInfo.getBoxObjByBoxName(board, boxName);
     const { disabled, borders } = boxObj;
-    if(!boxInfo.isClickable(borders, side)) return console.log("line not clickable");
+    if(!boxInfo.isClickable(borders, side)){
+      if(!disabled){
+        wrong.setCurrentTime(0);
+        return wrong.play()
+      }
+      return;
+    }
 
     const { adjBoxSide, adjacentBoxIndex } = boxInfo.getAdjacentBoxInfo(board, side, index);
     const adjBoxName = boxInfo.getBoxNameByIndex(adjacentBoxIndex);
 
     if(boxInfo.hasFootRestriction(footIndexes, index, adjacentBoxIndex)){
-      console.log(index)
-      return console.log("foot restriction")
+      wrong.setCurrentTime(0);
+      return wrong.play();
     };
 
     setSide(boxName, side);
@@ -315,6 +324,11 @@ const PlayGame = (props) => {
     if(adjacentBoxIndex || adjacentBoxIndex === 0){
       setSide(adjBoxName, adjBoxSide);
       (!boxInfo.isDisabled(board, adjBoxName)) && updatedConnections.push(adjacentBoxIndex);
+    }
+
+    if(!disabled || !boxInfo.isDisabled(board, adjBoxName)){
+      lineClick.setCurrentTime(0);
+      lineClick.play();
     }
 
     updatedConnections.length && adjustConnectedBoxes(updatedConnections);
