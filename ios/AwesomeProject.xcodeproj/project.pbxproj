@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -36,6 +37,7 @@
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* AwesomeProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AwesomeProjectTests.m */; };
+		2DEABA92673A47E3A4049FE1 /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 502A75AB2C9646C38595FE46 /* libRNSound.a */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		327719B3DC684BACB6F41737 /* Raleway-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEF30A9C3D546DB90A45993 /* Raleway-SemiBold.ttf */; };
 		43D9CE3A0C2B4CBBAF3B6C42 /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4993BBA4FE4E8EB5C8366E /* libRNCAsyncStorage.a */; };
@@ -44,6 +46,10 @@
 		5343E421D5474DF0BD4CE780 /* Raleway-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CA36815A813040E8B319F2FD /* Raleway-Regular.ttf */; };
 		5345B593239B49BB8E7F2636 /* Raleway-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E3C805EFA494003A4976CEC /* Raleway-Bold.ttf */; };
 		5CB6ECF8D45449C385DC609B /* Raleway-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 665D47214B1E4B7590FC2550 /* Raleway-LightItalic.ttf */; };
+		611F92EB22DE913600CD1390 /* introMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 611F92E922DE913600CD1390 /* introMusic.mp3 */; };
+		611F92EC22DE913600CD1390 /* inGameMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 611F92EA22DE913600CD1390 /* inGameMusic.mp3 */; };
+		611F92F122DE981C00CD1390 /* lineClick.wav in Resources */ = {isa = PBXBuildFile; fileRef = 611F92EF22DE981C00CD1390 /* lineClick.wav */; };
+		611F92F222DE981C00CD1390 /* score.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 611F92F022DE981C00CD1390 /* score.mp3 */; };
 		7001AB3BF02445969F6D7B21 /* Raleway-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97637EA6E585498098A93325 /* Raleway-Medium.ttf */; };
 		72079A81AC084429B9BE1D0B /* Raleway-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 76AAF45D21FD4460878C6409 /* Raleway-BlackItalic.ttf */; };
 		7DB6D4FC498B4E0999B05C6F /* Raleway-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 427DE9810EB3435F80DF5137 /* Raleway-ExtraBoldItalic.ttf */; };
@@ -60,7 +66,6 @@
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		FB895644CB254F9AA40A8880 /* Raleway-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1781A5C1ED8E4C3AAEF21367 /* Raleway-Black.ttf */; };
-		2DEABA92673A47E3A4049FE1 /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 502A75AB2C9646C38595FE46 /* libRNSound.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -288,6 +293,13 @@
 			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
 			remoteInfo = "RCTAnimation-tvOS";
 		};
+		611F92E722DE90E600CD1390 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F0169372C13E4992A6AA02A1 /* RNSound.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19825A1E1BD4A89800EE0337;
+			remoteInfo = RNSound;
+		};
 		6140DD0022DE85E5004B9665 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -396,8 +408,13 @@
 		427DE9810EB3435F80DF5137 /* Raleway-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-ExtraBoldItalic.ttf"; path = "../src/Raleway/Raleway-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		4C0E721E26DC423C9480377E /* Raleway-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-Italic.ttf"; path = "../src/Raleway/Raleway-Italic.ttf"; sourceTree = "<group>"; };
 		4E3C805EFA494003A4976CEC /* Raleway-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-Bold.ttf"; path = "../src/Raleway/Raleway-Bold.ttf"; sourceTree = "<group>"; };
+		502A75AB2C9646C38595FE46 /* libRNSound.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSound.a; sourceTree = "<group>"; };
 		5DEF30A9C3D546DB90A45993 /* Raleway-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-SemiBold.ttf"; path = "../src/Raleway/Raleway-SemiBold.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		611F92E922DE913600CD1390 /* introMusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = introMusic.mp3; path = ../src/components/Game/Sounds/introMusic.mp3; sourceTree = "<group>"; };
+		611F92EA22DE913600CD1390 /* inGameMusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = inGameMusic.mp3; path = ../src/components/Game/Sounds/inGameMusic.mp3; sourceTree = "<group>"; };
+		611F92EF22DE981C00CD1390 /* lineClick.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = lineClick.wav; path = ../src/components/Game/Sounds/lineClick.wav; sourceTree = "<group>"; };
+		611F92F022DE981C00CD1390 /* score.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = score.mp3; path = ../src/components/Game/Sounds/score.mp3; sourceTree = "<group>"; };
 		665D47214B1E4B7590FC2550 /* Raleway-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-LightItalic.ttf"; path = "../src/Raleway/Raleway-LightItalic.ttf"; sourceTree = "<group>"; };
 		76AAF45D21FD4460878C6409 /* Raleway-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-BlackItalic.ttf"; path = "../src/Raleway/Raleway-BlackItalic.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -411,9 +428,8 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		EE9BE95D32DC4373B25CE936 /* Raleway-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-ExtraLightItalic.ttf"; path = "../src/Raleway/Raleway-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
+		F0169372C13E4992A6AA02A1 /* RNSound.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
 		F57F49E3E9CA468EA7A2F502 /* libRNGestureHandler-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNGestureHandler-tvOS.a"; sourceTree = "<group>"; };
-		F0169372C13E4992A6AA02A1 /* RNSound.xcodeproj */ = {isa = PBXFileReference; name = "RNSound.xcodeproj"; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		502A75AB2C9646C38595FE46 /* libRNSound.a */ = {isa = PBXFileReference; name = "libRNSound.a"; path = "libRNSound.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -611,12 +627,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		611F92E422DE90E600CD1390 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				611F92E822DE90E600CD1390 /* libRNSound.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		6140DCDA22DE85E5004B9665 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
 				3B4993BBA4FE4E8EB5C8366E /* libRNCAsyncStorage.a */,
 				402CE5D3C0D74A8AB83C5AB4 /* libRNGestureHandler.a */,
 				F57F49E3E9CA468EA7A2F502 /* libRNGestureHandler-tvOS.a */,
+				502A75AB2C9646C38595FE46 /* libRNSound.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -681,6 +706,10 @@
 		83C40D1E8061479785570FEB /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				611F92EA22DE913600CD1390 /* inGameMusic.mp3 */,
+				611F92E922DE913600CD1390 /* introMusic.mp3 */,
+				611F92EF22DE981C00CD1390 /* lineClick.wav */,
+				611F92F022DE981C00CD1390 /* score.mp3 */,
 				1781A5C1ED8E4C3AAEF21367 /* Raleway-Black.ttf */,
 				76AAF45D21FD4460878C6409 /* Raleway-BlackItalic.ttf */,
 				4E3C805EFA494003A4976CEC /* Raleway-Bold.ttf */,
@@ -906,6 +935,10 @@
 					ProductGroup = 6140DD0C22DE85E7004B9665 /* Products */;
 					ProjectRef = 946ECF7B7C7145FE83193F69 /* RNGestureHandler.xcodeproj */;
 				},
+				{
+					ProductGroup = 611F92E422DE90E600CD1390 /* Products */;
+					ProjectRef = F0169372C13E4992A6AA02A1 /* RNSound.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1128,6 +1161,13 @@
 			remoteRef = 5E9157341DD0AC6500FF2AA8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		611F92E822DE90E600CD1390 /* libRNSound.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSound.a;
+			remoteRef = 611F92E722DE90E600CD1390 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		6140DD0122DE85E5004B9665 /* libjsi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1217,10 +1257,12 @@
 				FB895644CB254F9AA40A8880 /* Raleway-Black.ttf in Resources */,
 				72079A81AC084429B9BE1D0B /* Raleway-BlackItalic.ttf in Resources */,
 				5345B593239B49BB8E7F2636 /* Raleway-Bold.ttf in Resources */,
+				611F92EB22DE913600CD1390 /* introMusic.mp3 in Resources */,
 				9327D34EE6DE45B4A94E84DD /* Raleway-BoldItalic.ttf in Resources */,
 				1F9FBAFAD7E54B85B8AAA850 /* Raleway-ExtraBold.ttf in Resources */,
 				7DB6D4FC498B4E0999B05C6F /* Raleway-ExtraBoldItalic.ttf in Resources */,
 				ACEAC1F93FF54F3F99B2693E /* Raleway-ExtraLight.ttf in Resources */,
+				611F92F122DE981C00CD1390 /* lineClick.wav in Resources */,
 				1F39B7D3BC19445DA62E3657 /* Raleway-ExtraLightItalic.ttf in Resources */,
 				AC7497DB8CAD4FD6BD75CD50 /* Raleway-Italic.ttf in Resources */,
 				A85E60F9AE8F4F969CF8C4F8 /* Raleway-Light.ttf in Resources */,
@@ -1229,9 +1271,11 @@
 				51FEA533834844F4A6E277F0 /* Raleway-MediumItalic.ttf in Resources */,
 				5343E421D5474DF0BD4CE780 /* Raleway-Regular.ttf in Resources */,
 				327719B3DC684BACB6F41737 /* Raleway-SemiBold.ttf in Resources */,
+				611F92F222DE981C00CD1390 /* score.mp3 in Resources */,
 				D4C6822BAA62495888D9865C /* Raleway-SemiBoldItalic.ttf in Resources */,
 				BC475F1D46D84AA89BBE1066 /* Raleway-Thin.ttf in Resources */,
 				C5A2A77684D244B1959D98C1 /* Raleway-ThinItalic.ttf in Resources */,
+				611F92EC22DE913600CD1390 /* inGameMusic.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

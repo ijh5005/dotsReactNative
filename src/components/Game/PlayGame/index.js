@@ -27,7 +27,13 @@ import { explosionStlyes } from "../util/ExplosionStlyes";
 import { settings } from "../util/Settings";
 import { images } from "../util/Images";
 import { util } from "../util/Util";
+// import { trainRestrictions } from "../util/Training";
 import { footSquares } from "../FootSquares";
+
+import {
+  lineClick,
+  score
+} from "../Sounds";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -89,7 +95,7 @@ const PlayGame = (props) => {
           return setGameIsOver(true);
         }
       }
-    }, 100)
+    }, 200)
   }, [playerTurn, whoScored]); // this is only used if borders or connectedBoxes change
 
   useEffect(() => {
@@ -156,6 +162,16 @@ const PlayGame = (props) => {
     setDefaultBombs();
   }, [currentLevel])
 
+  const passedMoveRestrictions = () => {
+    const passedRestrictions = true;
+    // for(let level in trainRestrictions){
+    //   if(level && level === currentLevel){
+    //
+    //   }
+    // }
+    return passedRestrictions;
+  }
+
   const adjustBorderCount = () => {
     const temp = boxInfo.getBorderCounts(board);
     setBorders({ ...temp });
@@ -206,6 +222,9 @@ const PlayGame = (props) => {
       setPlayerTurn(whosTurn);
     } else {
 
+      score.setCurrentTime(0);
+      score.play();
+
       const boxIndex = clickedIndexes[0];
       const box = (boxIndex || boxIndex === 0) ? boxInfo.getBoxNameByIndex(boxIndex) : false;
       const boxLineCount = box ? borders[box] : false;
@@ -237,7 +256,12 @@ const PlayGame = (props) => {
   }
 
   const clickBorder = (side, index, player) => {
+    if(!passedMoveRestrictions()) return;
+
     if(player !== playerTurn) return console.log("not your turn");
+
+    lineClick.setCurrentTime(0);
+    lineClick.play();
 
     const boxName = boxInfo.getBoxNameByIndex(index);
     const boxObj = boxInfo.getBoxObjByBoxName(board, boxName);
@@ -276,9 +300,18 @@ const PlayGame = (props) => {
   const keys = Object.keys(board);
 
   const setExplosionBoxes = (boxIndex) => {
+    if(!passedMoveRestrictions()) return;
+
     if(!activeBomb.length) return;
 
-    const temp = boxInfo.getLightPattern(explosions, activeBomb, boxIndex);
+    const bomb = activeBomb.slice(0, -1);
+
+    const temp7 = [...currentLevelBombs];
+    const bombIndex = temp7.indexOf(bomb);
+    temp7.splice(bombIndex, 1);
+    setCurrentLevelBombs(temp7);
+
+    const temp = boxInfo.getLightPattern(explosions, bomb, boxIndex);
     setExplodingBoxes(temp);
 
     const temp2 = {...board}
@@ -287,7 +320,7 @@ const PlayGame = (props) => {
     const temp5 = {...connectedBoxes}
     const temp6 = [...footIndexes]
 
-    const bombType = explosionSides[activeBomb][`box${boxIndex}`];
+    const bombType = explosionSides[bomb][`box${boxIndex}`];
     for(let side in bombType){
       const sideIndex = boxInfo.getSideIndex(side);
       bombType[side].forEach(rowBoxIndex => {
@@ -325,13 +358,15 @@ const PlayGame = (props) => {
     setBorders(temp4);
     setConnectedBoxes(temp5);
     setFootIndexes(temp6);
+    setActiveBomb("");
   }
 
-  const selectBomb = (bomb) => {
-    if(activeBomb === bomb){
+  const selectBomb = (bomb, index) => {
+    if(!passedMoveRestrictions()) return;
+    if(activeBomb === bomb + index){
       return setActiveBomb("")
     }
-    setActiveBomb(bomb)
+    setActiveBomb(`${bomb}${index}`)
   }
 
   const changeLevel = (level, levelText) => {
@@ -466,8 +501,8 @@ const PlayGame = (props) => {
           image = images.makedaImg;
           style = explosionStlyes.makedaBombStyle();
         }
-        return (<TouchableOpacity key={index} onPress={() => selectBomb(data)}>
-          <Animated.View style={activeBomb === data ? explosionStlyes.selectedBomb(letterColor) : {}}>
+        return (<TouchableOpacity key={index} onPress={() => selectBomb(data, index)}>
+          <Animated.View style={activeBomb === data + index ? explosionStlyes.selectedBomb(letterColor) : {}}>
             <Image
               style={style}
               source={image}
