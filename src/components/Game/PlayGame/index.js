@@ -32,7 +32,9 @@ import { footSquares } from "../FootSquares";
 
 import {
   lineClick,
-  score
+  score,
+  iseeu,
+  okay
 } from "../Sounds";
 
 var width = Dimensions.get('window').width; //full width
@@ -64,6 +66,7 @@ const PlayGame = (props) => {
   const [viewPointer, setViewPointer] = useState(false);
   const [showBoard, setShowBoard] = useState(false);
   const [currentLevelBombs, setCurrentLevelBombs] = useState([]);
+  const [consecutiveTurns, setConsecutiveTurns] = useState(0);
 
   const checkComputerMove = () => {
     debugger
@@ -75,6 +78,7 @@ const PlayGame = (props) => {
     setTimeout(() => {
       // only use logic if it is the computer turn. ex: "second" player
       if(playerTurn === "second"){
+        setConsecutiveTurns(0)
         // get a move for the computer to make
         const move = computerMove(borders, connectedBoxes, board, footIndexes);
         // if the move is empty the computer has no moves
@@ -88,6 +92,14 @@ const PlayGame = (props) => {
         // if the move is not empty make a computer mover
         clickBorder(move.side, move.index, "second");
       } else {
+        
+        setConsecutiveTurns(consecutiveTurns + 1);
+        if(consecutiveTurns === 4){
+          iseeu.play();
+        } else if (consecutiveTurns === 6) {
+          okay.play();
+        }
+
         const totalScore = yourScore + computerScore;
         const aboutToScoreLastPoint = boardTotalScore - 1
         if(totalScore === aboutToScoreLastPoint && !footIndexes.length){

@@ -13,13 +13,6 @@ import { images } from "../util/Images";
 
 import { introMusic } from "../Sounds";
 
-const playGameMusic = () => {
-  setTimeout(() => {
-    // introMusic.play()
-  }, 2000)
-}
-playGameMusic();
-
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
@@ -34,9 +27,25 @@ const nameBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
 }
 
 const HomeScreen = (props) => {
+
+  useEffect(() => {
+    const playGameMusic = () => {
+      setTimeout(() => {
+        introMusic.setCurrentTime(0)
+        introMusic.play()
+      }, 2000)
+    }
+    playGameMusic();
+  }, []);
+
   const {
     startGame, motivationPage, storePage
   } = props;
+
+  const startTheGame = () => {
+    introMusic.pause();
+    startGame();
+  }
 
   const startingColor = 0;
   const endingColor = 1;
@@ -63,7 +72,7 @@ const HomeScreen = (props) => {
   return (<View style={styles.fullPage}>
     <View style={styles.menuArea}>
       <View style={styles.textSectionStlye}>
-        <TouchableOpacity onPress={startGame}>
+        <TouchableOpacity onPress={startTheGame}>
           <Text style={styles.textBoxStlye}>play</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={motivationPage}>
