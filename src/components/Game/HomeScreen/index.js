@@ -28,22 +28,28 @@ const nameBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
 
 const HomeScreen = (props) => {
 
-  useEffect(() => {
-    const playGameMusic = () => {
-      setTimeout(() => {
-        introMusic.setCurrentTime(0)
-        introMusic.play()
-      }, 2000)
-    }
-    playGameMusic();
-  }, []);
+  const playGameMusic = () => {
+    setTimeout(() => {
+      introMusic.setCurrentTime(0);
+      introMusic.play();
+      introMusic.setNumberOfLoops(-1);
+    }, 500)
+  }
 
   const {
-    startGame, motivationPage, storePage
+    startGame, motivationPage, storePage, navigation
   } = props;
 
-  const startTheGame = () => {
+  navigation.addListener('willFocus', () => {
+    playGameMusic();
+  })
+
+  navigation.addListener('willBlur', () => {
+    introMusic.setCurrentTime(0);
     introMusic.pause();
+  })
+
+  const startTheGame = () => {
     startGame();
   }
 

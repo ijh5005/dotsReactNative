@@ -10,7 +10,7 @@ var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 const Game = (props) => {
-  const { navigate } = props.navigation;
+  const { navigate, navigation } = props.navigation;
   const clearAllStorage = async () => await AsyncStorage.clear();
   const startGame = () => navigate("Game");
   const motivationPage = () => navigate("Motivation");
@@ -20,6 +20,7 @@ const Game = (props) => {
     <Image style={styles.imgStyle} source={images.background} />
 
     <HomeScreen
+      navigation={props.navigation}
       startGame={startGame}
       motivationPage={motivationPage}
       storePage={storePage}/>

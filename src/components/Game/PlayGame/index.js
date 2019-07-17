@@ -34,13 +34,32 @@ import {
   lineClick,
   score,
   iseeu,
-  okay
+  okay,
+  inGameMusic
 } from "../Sounds";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
 const PlayGame = (props) => {
+
+  const playGameMusic = () => {
+    setTimeout(() => {
+      inGameMusic.setCurrentTime(0);
+      inGameMusic.play();
+      inGameMusic.setNumberOfLoops(-1);
+      inGameMusic.setVolume(0.2);
+    }, 500)
+  }
+
+  props.navigation.addListener('willFocus', () => {
+    playGameMusic();
+  })
+
+  props.navigation.addListener('willBlur', () => {
+    inGameMusic.setCurrentTime(0);
+    inGameMusic.pause();
+  })
 
   const { navigate } = props.navigation;
 
@@ -92,7 +111,7 @@ const PlayGame = (props) => {
         // if the move is not empty make a computer mover
         clickBorder(move.side, move.index, "second");
       } else {
-        
+
         setConsecutiveTurns(consecutiveTurns + 1);
         if(consecutiveTurns === 4){
           iseeu.play();
