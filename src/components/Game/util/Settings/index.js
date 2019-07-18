@@ -5,7 +5,7 @@ export const settings = {
     "2": "foot",
     "6": "makeda"
   },
-  isDebuggingMode: true,
+  isDebuggingMode: false,
   levels: [1, 2, 3, 4, 5, 6, 7, 8],
   levelDefaultBombs: {
     level1: [],

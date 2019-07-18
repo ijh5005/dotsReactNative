@@ -41,15 +41,16 @@ const HomeScreen = (props) => {
   } = props;
 
   navigation.addListener('willFocus', () => {
-    playGameMusic();
-  })
-
-  navigation.addListener('willBlur', () => {
-    introMusic.setCurrentTime(0);
-    introMusic.pause();
+    introMusic.getCurrentTime((seconds) => {
+      if(seconds === 0){
+        playGameMusic();
+      }
+    });
   })
 
   const startTheGame = () => {
+    introMusic.setCurrentTime(0);
+    introMusic.pause();
     startGame();
   }
 

@@ -113,11 +113,13 @@ const PlayGame = (props) => {
         clickBorder(move.side, move.index, "second");
       } else {
 
-        setConsecutiveTurns(consecutiveTurns + 1);
-        if(consecutiveTurns === 4){
-          iseeu.play();
-        } else if (consecutiveTurns === 6) {
-          okay.play();
+        if(yourScore > 0){
+          setConsecutiveTurns(consecutiveTurns + 1);
+          if(consecutiveTurns === 4){
+            iseeu.play();
+          } else if (consecutiveTurns === 6) {
+            okay.play();
+          }
         }
 
         const totalScore = yourScore + computerScore;
@@ -127,7 +129,7 @@ const PlayGame = (props) => {
           return setGameIsOver(true);
         }
       }
-    }, 200)
+    }, 400)
   }, [playerTurn, whoScored]); // this is only used if borders or connectedBoxes change
 
   useEffect(() => {
@@ -327,7 +329,6 @@ const PlayGame = (props) => {
     }
 
     if(!disabled || !boxInfo.isDisabled(board, adjBoxName)){
-      lineClick.setCurrentTime(0);
       lineClick.play();
     }
 
@@ -560,10 +561,11 @@ const PlayGame = (props) => {
     <TouchableOpacity
       style={styles.goldSection}
       onPress={settings.isDebuggingMode ? () => { checkComputerMove() } : null}>
-      <Text style={styles.goldText}>1000</Text>
-      <View style={styles.gold}>
+      {/*<Text style={styles.goldText}>1000</Text>*/}
+      <Text style={styles.goldText}>levels</Text>
+      {/*<View style={styles.gold}>
         <Image style={styles.goldImg} source={images.goldBlock} resizeMode="contain" />
-      </View>
+      </View>*/}
     </TouchableOpacity>
 
     <View style={styles.levelSelectSection}>
