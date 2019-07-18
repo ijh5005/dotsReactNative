@@ -11,7 +11,7 @@ import {
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-const GameOver = (props) => {
+const ScreenText = (props) => {
 
   const {restartGame} = props;
 
@@ -49,7 +49,7 @@ const GameOver = (props) => {
   </Animated.View>)
 }
 
-export default GameOver;
+export default ScreenText;
 
 const styles = StyleSheet.create({
   textSectionStlye: {
