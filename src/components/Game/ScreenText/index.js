@@ -13,38 +13,49 @@ var height = Dimensions.get('window').height; //full height
 
 const ScreenText = (props) => {
 
-  const {restartGame} = props;
+  const { text } = props;
 
-  let top = new Animated.Value(200);
+  let top = new Animated.Value(500);
   let opacity = new Animated.Value(0);
 
   Animated.timing(
     opacity,
     { toValue: 1, duration: 500 }
-  ).start();
+  ).start(() => {
+    setTimeout(() => {
+      Animated.timing(
+        opacity,
+        { toValue: 0, duration: 500 }
+      ).start()
+    }, 250)
+  });
   Animated.timing(
     top,
-    { toValue: 0, duration: 500 }
-  ).start();
+    { toValue: 200, duration: 500 }
+  ).start(() => {
+    setTimeout(() => {
+      Animated.timing(
+        top,
+        { toValue: -100, duration: 500 }
+      ).start()
+    }, 500)
+  });
 
   const gameOverStyle = (top, opacity) => {
     return {
       width,
       height,
       position: "absolute",
-      top ,
+      height: 40,
+      top,
       left: 0,
-      backgroundColor: "rgba(39, 0, 56, 0.6)",
       opacity
     }
   }
 
   return (<Animated.View style={gameOverStyle(top, opacity)}>
     <View style={styles.textSectionStlye}>
-      <Text style={styles.gameOver}>GAME OVER</Text>
-      <TouchableOpacity onPress={restartGame}>
-        <Text style={styles.retry}>RETRY</Text>
-      </TouchableOpacity>
+      <Text style={styles.text}>{text}</Text>
     </View>
   </Animated.View>)
 }
@@ -53,22 +64,13 @@ export default ScreenText;
 
 const styles = StyleSheet.create({
   textSectionStlye: {
-    backgroundColor: "#270038",
     width,
-    height: 120,
-    position: "absolute",
-    top: "20%",
     justifyContent: "center",
     alignItems: "center"
   },
-  gameOver: {
-    color: "#980000",
-    fontSize: 20,
-    opacity: 1
-  },
-  retry: {
-    color: "#fff",
+  text: {
+    color: "#b57800",
     fontSize: 40,
-    opacity: 0.6
+    fontFamily: "Raleway-ExtraBoldItalic"
   }
 });

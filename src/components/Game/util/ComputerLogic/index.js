@@ -1,13 +1,14 @@
 import { boxInfo } from "../BoxInfo";
 import { gotem } from "../../Sounds";
 
-export const computerMove = (borders, connectedBoxes, board, footIndexes) => {
+export const computerMove = (borders, connectedBoxes, board, footIndexes, showScreenText) => {
 
   let choice = false;
   const threeBorderOptions = boxInfo.getThreeBorderOptions(borders, connectedBoxes, board, footIndexes);
   if(threeBorderOptions.length){
     choice = threeBorderOptions[0];
     if(boxInfo.getNoBorderOptions(borders, connectedBoxes, board, footIndexes).length > 0){
+      showScreenText("HA! GOT EM")
       gotem.play();
     }
   } else {

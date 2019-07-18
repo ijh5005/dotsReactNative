@@ -16,6 +16,7 @@ import GameOver from "../GameOver";
 import YouWin from "../YouWin";
 import InformativeScreen from "../InformativeScreen";
 import Pointer from "../Pointer";
+import ScreenText from "../ScreenText";
 
 import { gameBoards } from "../GameBoards";
 import { boxInfo } from "../util/BoxInfo";
@@ -87,11 +88,19 @@ const PlayGame = (props) => {
   const [showBoard, setShowBoard] = useState(false);
   const [currentLevelBombs, setCurrentLevelBombs] = useState([]);
   const [consecutiveTurns, setConsecutiveTurns] = useState(0);
+  const [screenText, setScreenText] = useState("");
 
   const checkComputerMove = () => {
     debugger
     const move = computerMove(borders, connectedBoxes, board, footIndexes);
     debugger
+  }
+
+  const showScreenText = (text) => {
+    setScreenText(text)
+    setTimeout(() => {
+      setScreenText("")
+    }, 1000)
   }
 
   useEffect(() => {
@@ -100,7 +109,7 @@ const PlayGame = (props) => {
       if(playerTurn === "second"){
         setConsecutiveTurns(0)
         // get a move for the computer to make
-        const move = computerMove(borders, connectedBoxes, board, footIndexes);
+        const move = computerMove(borders, connectedBoxes, board, footIndexes, showScreenText);
         // if the move is empty the computer has no moves
         if(!move && !footIndexes.length){
           setYouWin(yourScore > computerScore);
@@ -116,8 +125,10 @@ const PlayGame = (props) => {
         if(yourScore > 0){
           setConsecutiveTurns(consecutiveTurns + 1);
           if(consecutiveTurns === 4){
+            showScreenText("I SEE YOU");
             iseeu.play();
           } else if (consecutiveTurns === 6) {
+            showScreenText("OKAY")
             okay.play();
           }
         }
@@ -598,6 +609,8 @@ const PlayGame = (props) => {
         facts={informationType}
         close={closeInformationScreen}
       />}
+
+    {screenText.length !== 0 && <ScreenText text={screenText} />}
 
   </View>)
 
