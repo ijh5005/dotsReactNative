@@ -20,7 +20,7 @@ const ScreenText = (props) => {
 
   Animated.timing(
     opacity,
-    { toValue: 1, duration: 500 }
+    { toValue: 1, duration: 400 }
   ).start(() => {
     setTimeout(() => {
       Animated.timing(
@@ -31,7 +31,7 @@ const ScreenText = (props) => {
   });
   Animated.timing(
     top,
-    { toValue: 200, duration: 500 }
+    { toValue: 200, duration: 400 }
   ).start(() => {
     setTimeout(() => {
       Animated.timing(

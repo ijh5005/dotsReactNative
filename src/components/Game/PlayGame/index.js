@@ -50,7 +50,7 @@ const PlayGame = (props) => {
       inGameMusic.setCurrentTime(0);
       inGameMusic.play();
       inGameMusic.setNumberOfLoops(-1);
-      inGameMusic.setVolume(0.2);
+      inGameMusic.setVolume(0.4);
     }, 500)
   }
 
