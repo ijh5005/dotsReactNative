@@ -33,7 +33,7 @@ const HomeScreen = (props) => {
       introMusic.setCurrentTime(0);
       introMusic.play();
       introMusic.setNumberOfLoops(-1);
-    }, 500)
+    }, 1000)
   }
 
   const {

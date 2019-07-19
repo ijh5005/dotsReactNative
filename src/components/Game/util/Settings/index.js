@@ -9,7 +9,7 @@ export const settings = {
   levels: [1, 2, 3, 4, 5, 6, 7, 8],
   levelDefaultBombs: {
     level1: [],
-    level2: ["cheetah", "cheetah", "cheetah"],
+    level2: ["cheetah", "cheetah", "panther"],
     level3: ["panther", "panther"],
     level4: ["cheetah", "panther"],
     level5: ["panther"],

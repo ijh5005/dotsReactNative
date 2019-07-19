@@ -10,7 +10,6 @@ import {
 import { boxInfo } from "../util/BoxInfo";
 
 const gold = require("../../../imgs/gold.png");
-// const foot = require("../../../imgs/asset_statue_foot.png");
 const foot = require("../../../imgs/foot.png");
 
 const GameBlock = (props) => {
@@ -39,6 +38,29 @@ const GameBlock = (props) => {
     }
   }, [props.explodingBoxes]);
 
+  // line animation
+  const startingColor = 0;
+  const endingColor = 1;
+  let colorAnimation = new Animated.Value(startingColor);
+
+  const animateScoreBoard = () => {
+    Animated.timing(
+      colorAnimation,
+      { toValue: endingColor, duration: 500 }
+    ).start(() => {
+      Animated.timing(
+        colorAnimation,
+        { toValue: startingColor, duration: 500 }
+      ).start(animateScoreBoard);
+    });
+  }
+  animateScoreBoard();
+
+  const letterColor = colorAnimation.interpolate({
+    inputRange: [ 0, 1 ],
+    outputRange: [ '#270035', '#b57800' ]
+  });
+
   const {
     isDisabledBox,
     borders,
@@ -57,7 +79,8 @@ const GameBlock = (props) => {
     isRightSideRow,
     isBottomSideRow,
     isLeftSideRow,
-    footIndexes
+    footIndexes,
+    highlightEdge
   } = props;
 
   const scoreColor = (scored === "second") && "#2b0938";
@@ -98,10 +121,10 @@ const GameBlock = (props) => {
       borderRightWidth: (isTopRightCornerBox || isBottomRightCornerBox || isRightSideRow) ? 2 : 1,
       borderBottomWidth: (isBottomRightCornerBox || isBottomLeftCornerBox || isBottomSideRow) ? 2 : 1,
       borderLeftWidth: (isTopLeftCornerBox || isBottomLeftCornerBox || isLeftSideRow) ? 2 : 1,
-      borderTopColor: topBorderColor,
-      borderRightColor: rightBorderColor,
-      borderBottomColor: bottomBorderColor,
-      borderLeftColor: leftBorderColor
+      borderTopColor: (highlightEdge === "top") ? letterColor : topBorderColor,
+      borderRightColor: (highlightEdge === "right") ? letterColor : rightBorderColor,
+      borderBottomColor: (highlightEdge === "bottom") ? letterColor : bottomBorderColor,
+      borderLeftColor: (highlightEdge === "left") ? letterColor : leftBorderColor
     },
     top: {
       height: "40%",
@@ -190,7 +213,7 @@ const GameBlock = (props) => {
   }
 
   return (<TouchableOpacity onPress={() => clickGameBox()}>
-    <View style={{...styles.box, ...borderStyles}}>
+    <Animated.View style={{...styles.box, ...borderStyles}}>
 
       {(scored === "first") && <View style={styles.yourScore}>
         <Image
@@ -230,7 +253,7 @@ const GameBlock = (props) => {
         />
       </View>}
 
-    </View>
+    </Animated.View>
   </TouchableOpacity>)
 
 }

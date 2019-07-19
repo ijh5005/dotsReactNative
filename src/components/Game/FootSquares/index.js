@@ -1,6 +1,6 @@
 export const footSquares = {
   level1: [],
-  level2: [9, 19, 22, 27],
+  level2: [9, 13, 16, 19, 22, 27],
   level3: [17, 27],
   level4: [1, 10, 22, 34],
   level5: [28, 34],

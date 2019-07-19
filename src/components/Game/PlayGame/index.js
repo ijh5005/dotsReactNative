@@ -28,7 +28,7 @@ import { explosionStlyes } from "../util/ExplosionStlyes";
 import { settings } from "../util/Settings";
 import { images } from "../util/Images";
 import { util } from "../util/Util";
-// import { trainRestrictions } from "../util/Training";
+import { trainRestrictions } from "../util/Training";
 import { footSquares } from "../FootSquares";
 
 import {
@@ -37,7 +37,8 @@ import {
   iseeu,
   okay,
   inGameMusic,
-  wrong
+  wrong,
+  explosion
 } from "../Sounds";
 
 var width = Dimensions.get('window').width; //full width
@@ -89,6 +90,7 @@ const PlayGame = (props) => {
   const [currentLevelBombs, setCurrentLevelBombs] = useState([]);
   const [consecutiveTurns, setConsecutiveTurns] = useState(0);
   const [screenText, setScreenText] = useState("");
+  const [training, setTraining] = useState("");
 
   const checkComputerMove = () => {
     debugger
@@ -108,6 +110,15 @@ const PlayGame = (props) => {
       // only use logic if it is the computer turn. ex: "second" player
       if(playerTurn === "second"){
         setConsecutiveTurns(0)
+
+        if(training && training.computerMoves && training.computerMoves.length){
+          const restriction = training.computerMoves[0];
+          if(restriction.type === "clickSide"){
+            clickBorder(restriction.side, restriction.box, "second");
+            return removeComputerUsedMoveRestriction();
+          }
+        }
+
         // get a move for the computer to make
         const move = computerMove(borders, connectedBoxes, board, footIndexes, showScreenText);
         // if the move is empty the computer has no moves
@@ -205,15 +216,69 @@ const PlayGame = (props) => {
       }
     }
     setDefaultBombs();
+    setTraining(util.breakRefAndCopy(trainRestrictions[currentLevel]));
   }, [currentLevel])
 
-  const passedMoveRestrictions = () => {
-    const passedRestrictions = true;
-    // for(let level in trainRestrictions){
-    //   if(level && level === currentLevel){
-    //
-    //   }
-    // }
+  const removeUsedMoveRestriction = () => {
+    const yourMoves = util.breakRefAndCopy(training.yourMoves);
+    const updatedMoves = yourMoves.slice(1, yourMoves.length);
+    setTraining({
+      ...training,
+      yourMoves: updatedMoves
+    });
+  }
+
+  const removeComputerUsedMoveRestriction = () => {
+    const computerMoves = util.breakRefAndCopy(training.computerMoves);
+    const updatedMoves = computerMoves.slice(1, computerMoves.length);
+    setTraining({
+      ...training,
+      computerMoves: updatedMoves
+    });
+  }
+
+  const passedMoveRestrictions = (
+    clickBox = null,
+    side = null,
+    bomb = null
+  ) => {
+    if(playerTurn !== "first") return true;
+
+    let passedRestrictions = true;
+    if(training && training.yourMoves.length){
+
+      const restriction = training.yourMoves[0];
+
+      if(restriction.type === "explosionClick"){
+        if(bomb && (bomb === restriction.bomb)){
+          passedRestrictions = true;
+          removeUsedMoveRestriction();
+        } else {
+          passedRestrictions = false;
+        }
+      } else if(restriction.type === "boxClick"){
+        if(clickBox && (clickBox === restriction.clickBox)){
+          passedRestrictions = true;
+          removeUsedMoveRestriction();
+        } else {
+          passedRestrictions = false;
+        }
+      } else if (restriction.type === "clickSide"){
+        if(clickBox && side && restriction.boxes.includes(clickBox)){
+          const index = restriction.boxes.indexOf(clickBox);
+          if(side === restriction.sides[index]){
+            passedRestrictions = true;
+            removeUsedMoveRestriction();
+          } else {
+            passedRestrictions = false;
+          }
+        } else {
+          passedRestrictions = false;
+        }
+      }
+
+    }
+
     return passedRestrictions;
   }
 
@@ -301,7 +366,10 @@ const PlayGame = (props) => {
   }
 
   const clickBorder = (side, index, player) => {
-    if(!passedMoveRestrictions()) return;
+    if(!passedMoveRestrictions(index, side)){
+      wrong.setCurrentTime(0);
+      return wrong.play();
+    }
 
     if(player !== playerTurn){
       wrong.setCurrentTime(0);
@@ -357,9 +425,17 @@ const PlayGame = (props) => {
   const keys = Object.keys(board);
 
   const setExplosionBoxes = (boxIndex) => {
-    if(!passedMoveRestrictions()) return;
-
     if(!activeBomb.length) return;
+
+    if(!passedMoveRestrictions(boxIndex, null, activeBomb)){
+      wrong.setCurrentTime(0);
+      return wrong.play();
+    }
+
+    setTimeout(() => {
+      explosion.setCurrentTime(0);
+      explosion.play();
+    }, 250)
 
     const bomb = activeBomb.slice(0, -1);
 
@@ -419,7 +495,10 @@ const PlayGame = (props) => {
   }
 
   const selectBomb = (bomb, index) => {
-    if(!passedMoveRestrictions()) return;
+    if(!passedMoveRestrictions(null, null, bomb)){
+      wrong.setCurrentTime(0);
+      return wrong.play();
+    }
     if(activeBomb === bomb + index){
       return setActiveBomb("")
     }
