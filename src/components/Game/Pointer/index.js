@@ -37,6 +37,7 @@ const Pointer = (props) => {
   moveImage(bottom, startingBottom, stoppingBottom);
 
   return (<Animated.View
+    removeClippedSubviews={true}
     pointerEvents="none"
     style={{
       position: "absolute",

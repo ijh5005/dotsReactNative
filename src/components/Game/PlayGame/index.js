@@ -658,7 +658,7 @@ const PlayGame = (props) => {
         const blinkingBomb = (restriction && restriction.type === "explosionClick" && restriction.bomb === data);
 
         return (<TouchableOpacity key={index} onPress={() => selectBomb(data, index)}>
-          <Animated.View style={((activeBomb === data + index) || blinkingBomb) ? explosionStlyes.selectedBomb(letterColor) : {}}>
+          <Animated.View style={((activeBomb === data + index) || blinkingBomb) ? explosionStlyes.selectedBomb(letterColor) : {}} removeClippedSubviews={true}>
             <Image
               style={style}
               source={image}

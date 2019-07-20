@@ -57,8 +57,8 @@ const GameScoreBoard = (props) => {
 
   return (<View style={styles.scoreBoardStyle}>
 
-    <Animated.View style={opacityStyles.yourScoreBoard(playerTurn, turnOpacityAnimation)} />
-    <Animated.View style={opacityStyles.computerScoreBoard(playerTurn, turnOpacityAnimation)} />
+    <Animated.View style={opacityStyles.yourScoreBoard(playerTurn, turnOpacityAnimation)}  removeClippedSubviews={true}/>
+    <Animated.View style={opacityStyles.computerScoreBoard(playerTurn, turnOpacityAnimation)}  removeClippedSubviews={true}/>
 
     <View style={styles.scoreBoxStyle}>
       <Text style={styles.scoreTextStyle}>your score</Text>

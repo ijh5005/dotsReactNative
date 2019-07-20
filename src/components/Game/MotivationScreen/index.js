@@ -56,9 +56,7 @@ const StoreScreen = (props) => {
     </View>
 
     <View style={styles.textSection}>
-      <Text style={styles.text}> We live in a world where black women are marginalized, sexualized, and discarded. If anyone should try breaking these social norms, it should be the black community. </Text>
-      <Text style={styles.text}> The motivation of this game is to rekindle our respect for black women, educate on African royalty, and celebrate black culture. </Text>
-      <Text style={styles.text}> We need to embrace our culture and take pride in our presence. </Text>
+      <Text style={styles.text}> The purpose of this game is to rekindle our respect for black women,  learn  about African history,  celebrate black culture, and spread unity amongst  all black people regardless of class, gender, or sexuality.  </Text>
     </View>
   </View>)
 }
