@@ -225,7 +225,7 @@ const GameBlock = (props) => {
       {(scored === "first") && <View style={styles.yourScore}>
         <Image
           style={{flex:1, height: null, width: null}}
-          source={images.goldBlock}
+          source={images.gold}
         />
       </View>}
 

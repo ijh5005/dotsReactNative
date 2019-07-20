@@ -27,24 +27,16 @@ import { config } from "../util/Settings";
 import { images } from "../util/Images";
 import { util } from "../util/Util";
 import { trainRestrictions } from "../util/Training";
-import {
-  lineClick,
-  score,
-  iseeu,
-  okay,
-  inGameMusic,
-  wrong,
-  explosion
-} from "../Sounds";
+import { sounds } from "../Sounds";
 
 const PlayGame = (props) => {
 
   const playGameMusic = () => {
     setTimeout(() => {
-      inGameMusic.setCurrentTime(0);
-      inGameMusic.play();
-      inGameMusic.setNumberOfLoops(-1);
-      inGameMusic.setVolume(0.4);
+      sounds.inGameMusic.setCurrentTime(0);
+      sounds.inGameMusic.play();
+      sounds.inGameMusic.setNumberOfLoops(-1);
+      sounds.inGameMusic.setVolume(0.4);
     }, 500)
   }
 
@@ -53,8 +45,8 @@ const PlayGame = (props) => {
   })
 
   props.navigation.addListener('willBlur', () => {
-    inGameMusic.setCurrentTime(0);
-    inGameMusic.pause();
+    sounds.inGameMusic.setCurrentTime(0);
+    sounds.inGameMusic.pause();
   })
 
   const { navigate } = props.navigation;
@@ -130,10 +122,10 @@ const PlayGame = (props) => {
           setConsecutiveTurns(consecutiveTurns + 1);
           if(consecutiveTurns === 4){
             showScreenText("I SEE YOU");
-            iseeu.play();
+            sounds.iseeu.play();
           } else if (consecutiveTurns === 6) {
             showScreenText("OKAY")
-            okay.play();
+            sounds.okay.play();
           }
         }
 
@@ -325,8 +317,8 @@ const PlayGame = (props) => {
       setPlayerTurn(whosTurn);
     } else {
 
-      score.setCurrentTime(0);
-      score.play();
+      sounds.score.setCurrentTime(0);
+      sounds.score.play();
 
       const boxIndex = clickedIndexes[0];
       const box = (boxIndex || boxIndex === 0) ? boxInfo.getBoxNameByIndex(boxIndex) : false;
@@ -360,24 +352,24 @@ const PlayGame = (props) => {
 
   const clickBorder = (side, index, player) => {
     if(!passedMoveRestrictions(index, side)){
-      wrong.setCurrentTime(0);
-      return wrong.play();
+      sounds.wrong.setCurrentTime(0);
+      return sounds.wrong.play();
     }
 
     if(player !== playerTurn){
-      wrong.setCurrentTime(0);
-      return wrong.play()
+      sounds.wrong.setCurrentTime(0);
+      return sounds.wrong.play()
     }
 
-    lineClick.setCurrentTime(0);
+    sounds.lineClick.setCurrentTime(0);
 
     const boxName = boxInfo.getBoxNameByIndex(index);
     const boxObj = boxInfo.getBoxObjByBoxName(board, boxName);
     const { disabled, borders } = boxObj;
     if(!boxInfo.isClickable(borders, side)){
       if(!disabled){
-        wrong.setCurrentTime(0);
-        return wrong.play()
+        sounds.wrong.setCurrentTime(0);
+        return sounds.wrong.play()
       }
       return;
     }
@@ -386,8 +378,8 @@ const PlayGame = (props) => {
     const adjBoxName = boxInfo.getBoxNameByIndex(adjacentBoxIndex);
 
     if(boxInfo.hasFootRestriction(footIndexes, index, adjacentBoxIndex)){
-      wrong.setCurrentTime(0);
-      return wrong.play();
+      sounds.wrong.setCurrentTime(0);
+      return sounds.wrong.play();
     };
 
     setSide(boxName, side);
@@ -401,7 +393,7 @@ const PlayGame = (props) => {
     }
 
     if(!disabled || !boxInfo.isDisabled(board, adjBoxName)){
-      lineClick.play();
+      sounds.lineClick.play();
     }
 
     updatedConnections.length && adjustConnectedBoxes(updatedConnections);
@@ -421,13 +413,13 @@ const PlayGame = (props) => {
     if(!activeBomb.length) return;
 
     if(!passedMoveRestrictions(boxIndex, null, activeBomb)){
-      wrong.setCurrentTime(0);
-      return wrong.play();
+      sounds.wrong.setCurrentTime(0);
+      return sounds.wrong.play();
     }
 
     setTimeout(() => {
-      explosion.setCurrentTime(0);
-      explosion.play();
+      sounds.explosion.setCurrentTime(0);
+      sounds.explosion.play();
     }, 250)
 
     const bomb = activeBomb.slice(0, -1);
@@ -489,8 +481,8 @@ const PlayGame = (props) => {
 
   const selectBomb = (bomb, index) => {
     if(!passedMoveRestrictions(null, null, bomb)){
-      wrong.setCurrentTime(0);
-      return wrong.play();
+      sounds.wrong.setCurrentTime(0);
+      return sounds.wrong.play();
     }
     if(activeBomb === bomb + index){
       return setActiveBomb("")

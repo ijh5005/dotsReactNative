@@ -1,5 +1,5 @@
 import { boxInfo } from "../BoxInfo";
-import { gotem } from "../../Sounds";
+import { sounds } from "../../Sounds";
 
 export const computerMove = (borders, connectedBoxes, board, footIndexes, showScreenText) => {
 
@@ -9,7 +9,7 @@ export const computerMove = (borders, connectedBoxes, board, footIndexes, showSc
     choice = threeBorderOptions[0];
     if(boxInfo.getNoBorderOptions(borders, connectedBoxes, board, footIndexes).length > 0){
       showScreenText("HA! GOT EM")
-      gotem.play();
+      sounds.gotem.play();
     }
   } else {
     const noBorderOptions = boxInfo.getNoBorderOptions(borders, connectedBoxes, board, footIndexes);

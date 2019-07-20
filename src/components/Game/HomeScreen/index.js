@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 import { images } from "../util/Images";
-import { introMusic } from "../Sounds";
+import { sounds } from "../Sounds";
 import { config } from "../util/Settings";
 
 const nameBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
@@ -25,9 +25,9 @@ const nameBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
 const HomeScreen = (props) => {
 
   const playGameMusic = () => {
-    introMusic.setCurrentTime(0);
-    introMusic.play();
-    introMusic.setNumberOfLoops(-1);
+    sounds.introMusic.setCurrentTime(0);
+    sounds.introMusic.play();
+    sounds.introMusic.setNumberOfLoops(-1);
   }
 
   const {
@@ -35,7 +35,7 @@ const HomeScreen = (props) => {
   } = props;
 
   navigation.addListener('willFocus', () => {
-    introMusic.getCurrentTime((seconds) => {
+    sounds.introMusic.getCurrentTime((seconds) => {
       if(seconds === 0){
         playGameMusic();
       }
@@ -43,8 +43,8 @@ const HomeScreen = (props) => {
   })
 
   const startTheGame = () => {
-    introMusic.setCurrentTime(0);
-    introMusic.pause();
+    sounds.introMusic.setCurrentTime(0);
+    sounds.introMusic.pause();
     startGame();
   }
 
