@@ -4,14 +4,11 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Dimensions,
   StyleSheet
 } from "react-native";
 
 import { images } from "../util/Images";
-
-var width = Dimensions.get('window').width; //full width
-var height = Dimensions.get('window').height; //full height
+import { config } from "../util/Settings";
 
 const information = {
   foot: {
@@ -68,8 +65,8 @@ const styles = StyleSheet.create({
     position: "absolute"
   },
   informationPageBackground: {
-    width,
-    height,
+    width: config.width,
+    height: config.height,
     backgroundColor: "rgb(39, 0, 53)"
   },
   imgContainer: {

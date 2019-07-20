@@ -3,11 +3,10 @@ import {
   View,
   Text,
   Animated,
-  Dimensions,
   StyleSheet
 } from "react-native";
 
-var width = Dimensions.get('window').width; //full width
+import { config } from "../util/Settings";
 
 const GameScoreBoard = (props) => {
 
@@ -78,7 +77,7 @@ export default GameScoreBoard;
 
 const styles = StyleSheet.create({
   scoreBoardStyle: {
-    width,
+    width: config.width,
     height: 100,
     flexDirection: "row"
   },

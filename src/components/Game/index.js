@@ -1,13 +1,11 @@
 import React from "react";
-import { View, Image, Dimensions, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 
 import HomeScreen from "./HomeScreen";
 
 import { images } from "./util/Images";
-
-var width = Dimensions.get('window').width; //full width
-var height = Dimensions.get('window').height; //full height
+import { config } from "./util/Settings";
 
 const Game = (props) => {
   const { navigate, navigation } = props.navigation;
@@ -35,12 +33,12 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     alignItems: "center",
-    height,
-    width
+    height: config.height,
+    width: config.width
   },
   imgStyle: {
-    width,
-    height,
+    width: config.width,
+    height: config.height,
     position: "absolute",
     top: 0,
     left: 0

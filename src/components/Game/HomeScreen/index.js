@@ -4,17 +4,13 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Dimensions,
   Animated,
   StyleSheet
 } from "react-native";
 
 import { images } from "../util/Images";
-
 import { introMusic } from "../Sounds";
-
-var width = Dimensions.get('window').width; //full width
-var height = Dimensions.get('window').height; //full height
+import { config } from "../util/Settings";
 
 const nameBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
   return {
@@ -90,10 +86,10 @@ const HomeScreen = (props) => {
     </View>
 
     <View style={styles.title}>
-      <Animated.Text style={nameBoxStlye(letterColor, width * 0.3)}>D</Animated.Text>
+      <Animated.Text style={nameBoxStlye(letterColor, config.width * 0.3)}>D</Animated.Text>
       <Image style={styles.titleImg} source={images.rhino} />
-      <Animated.Text style={nameBoxStlye(letterColor, width * 0.3)}>T</Animated.Text>
-      <Animated.Text style={nameBoxStlye(letterColor, width * 0.3)}>S</Animated.Text>
+      <Animated.Text style={nameBoxStlye(letterColor, config.width * 0.3)}>T</Animated.Text>
+      <Animated.Text style={nameBoxStlye(letterColor, config.width * 0.3)}>S</Animated.Text>
     </View>
   </View>)
 }
@@ -102,20 +98,20 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   fullPage: {
-    width,
-    height
+    width: config.width,
+    height: config.height
   },
   menuArea: {
-    width,
-    height: (height * 0.8),
+    width: config.width,
+    height: (config.height * 0.8),
     position: "absolute",
     left: 0,
     bottom: 0,
     backgroundColor: "rgba(39, 0, 56, 0.6)"
   },
   imgStyle: {
-    width,
-    height,
+    width: config.width,
+    height: config.height,
     position: "absolute",
     paddingTop: 40
   },
@@ -140,7 +136,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    width
+    width: config.width
   },
   titleImg: {
     height: 60,

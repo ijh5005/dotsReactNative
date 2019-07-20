@@ -3,13 +3,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Dimensions,
   Animated,
   StyleSheet
 } from "react-native";
 
-var width = Dimensions.get('window').width; //full width
-var height = Dimensions.get('window').height; //full height
+import { config } from "../util/Settings";
 
 const textBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
   return
@@ -34,8 +32,8 @@ const GameOver = (props) => {
 
   const youWinStyle = (top, opacity) => {
     return {
-      width,
-      height,
+      width: config.width,
+      height: config.height,
       position: "absolute",
       top ,
       left: 0,
@@ -64,7 +62,7 @@ export default GameOver;
 const styles = StyleSheet.create({
   textSectionStlye: {
     backgroundColor: "#270038",
-    width,
+    width: config.width,
     height: 220,
     position: "absolute",
     top: "20%",

@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Dimensions,
   Animated,
   StyleSheet
 } from "react-native";
@@ -25,11 +24,10 @@ import { whoClickedTheLine } from "../util/WhoClicked";
 import { whoScoredObj } from "../util/WhoScored";
 import { explosions, explosionSides } from "../util/ExplosionPattern";
 import { explosionStlyes } from "../util/ExplosionStlyes";
-import { settings } from "../util/Settings";
+import { config } from "../util/Settings";
 import { images } from "../util/Images";
 import { util } from "../util/Util";
 import { trainRestrictions } from "../util/Training";
-import { footSquares } from "../FootSquares";
 
 import {
   lineClick,
@@ -40,9 +38,6 @@ import {
   wrong,
   explosion
 } from "../Sounds";
-
-var width = Dimensions.get('window').width; //full width
-var height = Dimensions.get('window').height; //full height
 
 const PlayGame = (props) => {
 
@@ -79,7 +74,7 @@ const PlayGame = (props) => {
   const [gameOver, setGameOver] = useState(false);
   const [explodingBoxes, setExplodingBoxes] = useState({});
   const [activeBomb, setActiveBomb] = useState("");
-  const [footIndexes, setFootIndexes] = useState(footSquares[currentLevel]);
+  const [footIndexes, setFootIndexes] = useState(config.footSquares[currentLevel]);
   const [gameIsOver, setGameIsOver] = useState(false);
   const [youWin, setYouWin] = useState(false);
   const [boardTotalScore, setBoardTotalScore] = useState(util.getBoardScore(gameBoards[currentLevel]))
@@ -209,10 +204,10 @@ const PlayGame = (props) => {
         if(completedLevels.includes(currentLevel)){
           setCurrentLevelBombs([])
         } else {
-          setCurrentLevelBombs(settings.levelDefaultBombs[currentLevel])
+          setCurrentLevelBombs(config.levelDefaultBombs[currentLevel])
         }
       } else {
-        setCurrentLevelBombs(settings.levelDefaultBombs[currentLevel])
+        setCurrentLevelBombs(config.levelDefaultBombs[currentLevel])
       }
     }
     setDefaultBombs();
@@ -519,14 +514,14 @@ const PlayGame = (props) => {
       setGameOver(false);
       setExplodingBoxes({});
       setActiveBomb("");
-      setFootIndexes(util.breakRefAndCopy(footSquares[level]));
+      setFootIndexes(util.breakRefAndCopy(config.footSquares[level]));
       setGameIsOver(false);
       setYouWin(false);
       setBoardTotalScore(util.getBoardScore(gameBoards[level]));
       setCurrentLevel(level);
-      if(settings.informationBoard.includes(levelText)){
+      if(config.informationBoard.includes(levelText)){
         setShowInformativeScreen(true);
-        const type = settings.informationText[`${levelText}`];
+        const type = config.informationText[`${levelText}`];
         setInformationType(type)
       }
     }
@@ -675,7 +670,7 @@ const PlayGame = (props) => {
 
     <TouchableOpacity
       style={styles.goldSection}
-      onPress={settings.isDebuggingMode ? () => { checkComputerMove() } : null}>
+      onPress={config.isDebuggingMode ? () => { checkComputerMove() } : null}>
       {/*<Text style={styles.goldText}>1000</Text>*/}
       <Text style={styles.goldText}>levels</Text>
       {/*<View style={styles.gold}>
@@ -684,7 +679,7 @@ const PlayGame = (props) => {
     </TouchableOpacity>
 
     <View style={styles.levelSelectSection}>
-      {settings.levels.map((data, index) => {
+      {config.levels.map((data, index) => {
         const levelStyle = (data === "x") ? styles.lockedLevel : styles.openLevel;
         const levelText = (data === "x") ? "x" : (index + 1);
         return (<TouchableOpacity key={index} onPress={changeLevel.bind(this, `level${index + 1}`, levelText)}>
@@ -706,7 +701,7 @@ const PlayGame = (props) => {
       <YouWin
         restartGame={restartGame}
         nextLevel={nextLevel}
-        isLastBoard={currentLevel === settings.finalLevel}
+        isLastBoard={currentLevel === config.finalLevel}
       />}
 
     {showInformativeScreen && <InformativeScreen
@@ -728,12 +723,12 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     alignItems: "center",
-    height,
-    width
+    height: config.height,
+    width: config.width
   },
   imgStyle: {
-    width,
-    height,
+    width: config.width,
+    height: config.height,
     position: "absolute",
     top: 0,
     left: 0
@@ -751,14 +746,14 @@ const styles = StyleSheet.create({
   },
   bombSection: {
     height: 60,
-    width,
+    width: config.width,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10
   },
   levelSelectSection: {
-    width: width * .8,
+    width: config.width * .8,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
@@ -805,6 +800,6 @@ const styles = StyleSheet.create({
   },
   space: {
     height: 20,
-    width
+    width: config.width
   }
 });

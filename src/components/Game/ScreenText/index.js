@@ -3,13 +3,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Dimensions,
   Animated,
   StyleSheet
 } from "react-native";
 
-var width = Dimensions.get('window').width; //full width
-var height = Dimensions.get('window').height; //full height
+import { config } from "../util/Settings";
 
 const ScreenText = (props) => {
 
@@ -43,8 +41,8 @@ const ScreenText = (props) => {
 
   const gameOverStyle = (top, opacity) => {
     return {
-      width,
-      height,
+      width: config.width,
+      height: config.height,
       position: "absolute",
       height: 40,
       top,
@@ -64,7 +62,7 @@ export default ScreenText;
 
 const styles = StyleSheet.create({
   textSectionStlye: {
-    width,
+    width: config.width,
     justifyContent: "center",
     alignItems: "center"
   },

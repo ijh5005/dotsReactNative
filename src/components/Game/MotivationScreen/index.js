@@ -3,15 +3,12 @@ import {
   View,
   Text,
   Image,
-  Dimensions,
   Animated,
   StyleSheet
 } from "react-native";
 
 import { images } from "../util/Images";
-
-var width = Dimensions.get('window').width; //full width
-var height = Dimensions.get('window').height; //full height
+import { config } from "../util/Settings";
 
 const StoreScreen = (props) => {
 
@@ -40,7 +37,7 @@ const StoreScreen = (props) => {
   const nameBoxStlye = (color) => {
     return {
       color,
-      fontSize: width * 0.14,
+      fontSize: config.width * 0.14,
       opacity: 1,
       fontWeight: "bold",
       fontFamily: "Raleway-Black",
@@ -65,18 +62,18 @@ export default StoreScreen;
 
 const styles = StyleSheet.create({
   motivationPage: {
-    width,
-    height
+    width: config.width,
+    height: config.height
   },
   title: {
     justifyContent: "center",
     alignItems: "center",
     marginTop: 40,
-    width
+    width: config.width
   },
   textSection: {
-    width: width * 0.9,
-    left: width * 0.05
+    width: config.width * 0.9,
+    left: config.width * 0.05
   },
   text: {
     color: "#fff",
@@ -87,8 +84,8 @@ const styles = StyleSheet.create({
     margin: 10
   },
   imgStyle: {
-    width,
-    height,
+    width: config.width,
+    height: config.height,
     position: "absolute",
     top: 0,
     left: 0,
