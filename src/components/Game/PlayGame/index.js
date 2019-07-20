@@ -15,7 +15,6 @@ import GameBlock from "../GameBlock";
 import GameOver from "../GameOver";
 import YouWin from "../YouWin";
 import InformativeScreen from "../InformativeScreen";
-import Pointer from "../Pointer";
 import ScreenText from "../ScreenText";
 
 import { gameBoards } from "../GameBoards";
@@ -600,6 +599,14 @@ const PlayGame = (props) => {
       const isDisabledBox = disabled || false;
       const hasScored = borders.top && borders.right && borders.bottom && borders.left;
       const borderColors = boxInfo.getBorderColors(box, whoClickedTheLineTracker);
+
+      let blinkingEdge = false;
+      const restriction = training && training.yourMoves && training.yourMoves[0];
+      if (restriction && restriction.type === "clickSide" && playerTurn === "first"){
+        const restrictionIndex = restriction.boxes.indexOf(index);
+        blinkingEdge = (restrictionIndex !== -1) && restriction.sides[restrictionIndex];
+      }
+
       return (<GameBlock
         isDisabledBox={isDisabledBox}
         borders={borders}
@@ -621,6 +628,7 @@ const PlayGame = (props) => {
         explodingBoxes={explodingBoxes}
         setExplosionBoxes={setExplosionBoxes}
         footIndexes={footIndexes}
+        blinkingEdge={blinkingEdge}
         key={index} />)})}
 
     <View style={styles.bombSection} >

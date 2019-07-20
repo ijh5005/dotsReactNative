@@ -7,6 +7,8 @@ import {
   Animated
 } from "react-native";
 
+import Pointer from "../Pointer";
+
 import { boxInfo } from "../util/BoxInfo";
 
 const gold = require("../../../imgs/gold.png");
@@ -58,7 +60,7 @@ const GameBlock = (props) => {
 
   const letterColor = colorAnimation.interpolate({
     inputRange: [ 0, 1 ],
-    outputRange: [ '#270035', '#b57800' ]
+    outputRange: [ '#49115e', '#b57800' ]
   });
 
   const {
@@ -80,7 +82,7 @@ const GameBlock = (props) => {
     isBottomSideRow,
     isLeftSideRow,
     footIndexes,
-    highlightEdge
+    blinkingEdge
   } = props;
 
   const scoreColor = (scored === "second") && "#2b0938";
@@ -121,10 +123,10 @@ const GameBlock = (props) => {
       borderRightWidth: (isTopRightCornerBox || isBottomRightCornerBox || isRightSideRow) ? 2 : 1,
       borderBottomWidth: (isBottomRightCornerBox || isBottomLeftCornerBox || isBottomSideRow) ? 2 : 1,
       borderLeftWidth: (isTopLeftCornerBox || isBottomLeftCornerBox || isLeftSideRow) ? 2 : 1,
-      borderTopColor: (highlightEdge === "top") ? letterColor : topBorderColor,
-      borderRightColor: (highlightEdge === "right") ? letterColor : rightBorderColor,
-      borderBottomColor: (highlightEdge === "bottom") ? letterColor : bottomBorderColor,
-      borderLeftColor: (highlightEdge === "left") ? letterColor : leftBorderColor
+      borderTopColor: (blinkingEdge === "top") ? letterColor : topBorderColor,
+      borderRightColor: (blinkingEdge === "right") ? letterColor : rightBorderColor,
+      borderBottomColor: (blinkingEdge === "bottom") ? letterColor : bottomBorderColor,
+      borderLeftColor: (blinkingEdge === "left") ? letterColor : leftBorderColor
     },
     top: {
       height: "40%",
@@ -212,6 +214,16 @@ const GameBlock = (props) => {
     props.setExplosionBoxes(props.index);
   }
 
+  let startingLeft = false;
+  let startingBottom = false;
+  if(blinkingEdge === "top"){
+    startingLeft = 35;
+    startingBottom = 60;
+  } else if (blinkingEdge === "left") {
+    startingLeft = 10;
+    startingBottom = 20;
+  }
+
   return (<TouchableOpacity onPress={() => clickGameBox()}>
     <Animated.View style={{...styles.box, ...borderStyles}}>
 
@@ -252,6 +264,13 @@ const GameBlock = (props) => {
           source={foot}
         />
       </View>}
+
+      {startingLeft && startingBottom
+        && <Pointer
+            startingLeft={startingLeft}
+            startingBottom={startingBottom}
+            duration={500}
+            distance={10}/>}
 
     </Animated.View>
   </TouchableOpacity>)

@@ -33,12 +33,20 @@ const Pointer = (props) => {
     });
   }
 
-  useEffect(() => {
-    moveImage(left, startingLeft, stoppingLeft);
-    moveImage(bottom, startingBottom, stoppingBottom);
-  }, [])
+  moveImage(left, startingLeft, stoppingLeft);
+  moveImage(bottom, startingBottom, stoppingBottom);
 
-  return (<Animated.View style={{position: "absolute", bottom, left, height: 60, width: 60, justifyContent: "center", alignItems: "center"}}>
+  return (<Animated.View
+    pointerEvents="none"
+    style={{
+      position: "absolute",
+      bottom,
+      left,
+      height: 26,
+      width: 26,
+      justifyContent: "center",
+      alignItems: "center"
+    }}>
     <Image
       style={{flex: 1, transform: [{ rotate: '-45deg'}]}}
       source={pointer}

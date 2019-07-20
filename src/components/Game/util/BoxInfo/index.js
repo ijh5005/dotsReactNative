@@ -554,7 +554,7 @@ export const boxInfo = {
 
   isDisabled: (board, box) => {
     if(!box) return true;
-    return board[box].disabled;
+    return board[box] && board[box].disabled;
   },
 
   getBorderStyles: ( borders, isTopRightCornerBox, isTopLeftCornerBox, isTopSideRow, isBottomRightCornerBox, isBottomLeftCornerBox, isBottomSideRow, isRightSideRow, isLeftSideRow ) => {

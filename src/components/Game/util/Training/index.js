@@ -13,7 +13,8 @@ export const trainRestrictions = {
     yourMoves: [{
       type: "clickSide",
       boxes: [14, 15],
-      sides: ["right", "left"]
+      sides: ["right", "left"],
+      text: "take turns selecting lines"
     }, {
       type: "clickSide",
       boxes: [20, 21],
@@ -21,7 +22,8 @@ export const trainRestrictions = {
     }, {
       type: "clickSide",
       boxes: [8, 14],
-      sides: ["bottom", "top"]
+      sides: ["bottom", "top"],
+      text: "form a box to score"
     }]
   },
   level2: {
