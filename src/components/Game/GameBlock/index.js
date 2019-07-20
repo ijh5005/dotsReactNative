@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
   Image,
   Animated
 } from "react-native";
 
 import Pointer from "../Pointer";
-
 import { boxInfo } from "../util/BoxInfo";
-
-const gold = require("../../../imgs/gold.png");
-const foot = require("../../../imgs/foot.png");
+import { images } from "../util/Images";
 
 const GameBlock = (props) => {
 
@@ -229,7 +225,7 @@ const GameBlock = (props) => {
       {(scored === "first") && <View style={styles.yourScore}>
         <Image
           style={{flex:1, height: null, width: null}}
-          source={gold}
+          source={images.goldBlock}
         />
       </View>}
 
@@ -260,7 +256,7 @@ const GameBlock = (props) => {
       {(footIndexes.includes(index)) && <View style={styles.foot}>
         <Image
           style={{flex:1, height: 50, width: 50}}
-          source={foot}
+          source={images.foot}
         />
       </View>}
 

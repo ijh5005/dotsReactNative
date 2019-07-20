@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -8,10 +8,6 @@ import {
 } from "react-native";
 
 import { config } from "../util/Settings";
-
-const textBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
-  return
-}
 
 const GameOver = (props) => {
 

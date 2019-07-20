@@ -7,7 +7,7 @@ import {
   Animated,
   StyleSheet
 } from "react-native";
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 
 import GameScoreBoard from "../GameScoreBoard";
 import GameBlock from "../GameBlock";
@@ -16,8 +16,7 @@ import YouWin from "../YouWin";
 import InformativeScreen from "../InformativeScreen";
 import ScreenText from "../ScreenText";
 import Pointer from "../Pointer";
-
-import { gameBoards } from "../GameBoards";
+import { gameBoards } from "../util/GameBoards";
 import { boxInfo } from "../util/BoxInfo";
 import { computerMove } from "../util/ComputerLogic";
 import { whoClickedTheLine } from "../util/WhoClicked";
@@ -28,7 +27,6 @@ import { config } from "../util/Settings";
 import { images } from "../util/Images";
 import { util } from "../util/Util";
 import { trainRestrictions } from "../util/Training";
-
 import {
   lineClick,
   score,
@@ -167,48 +165,48 @@ const PlayGame = (props) => {
   }, [whoScored])
 
   useEffect(() => {
-    if(gameIsOver && youWin){
-
-      const checkLevelDefaults = async () => {
-
-        try {
-          const allStorage = await AsyncStorage.getAllKeys();
-          if(allStorage.includes("completedLevels")){
-            const completedLevels = JSON.parse(await AsyncStorage.getItem("completedLevels"));
-            if(!completedLevels.includes(currentLevel)){
-              completedLevels.push(currentLevel);
-              await AsyncStorage.removeItem("completedLevels");
-              await AsyncStorage.setItem("completedLevels", JSON.stringify(completedLevels));
-            }
-          } else {
-            await AsyncStorage.setItem("completedLevels", JSON.stringify([currentLevel]));
-          }
-          const finalStorage = await AsyncStorage.getItem("completedLevels")
-          console.log(finalStorage)
-        } catch (e) {
-          console.log("local storage error")
-        }
-
-      }
-
-      checkLevelDefaults();
-
-    }
+    // if(gameIsOver && youWin){
+    //
+    //   const checkLevelDefaults = async () => {
+    //
+    //     try {
+    //       const allStorage = await AsyncStorage.getAllKeys();
+    //       if(allStorage.includes("completedLevels")){
+    //         const completedLevels = JSON.parse(await AsyncStorage.getItem("completedLevels"));
+    //         if(!completedLevels.includes(currentLevel)){
+    //           completedLevels.push(currentLevel);
+    //           await AsyncStorage.removeItem("completedLevels");
+    //           await AsyncStorage.setItem("completedLevels", JSON.stringify(completedLevels));
+    //         }
+    //       } else {
+    //         await AsyncStorage.setItem("completedLevels", JSON.stringify([currentLevel]));
+    //       }
+    //       const finalStorage = await AsyncStorage.getItem("completedLevels")
+    //       console.log(finalStorage)
+    //     } catch (e) {
+    //       console.log("local storage error")
+    //     }
+    //
+    //   }
+    //
+    //   checkLevelDefaults();
+    //
+    // }
   }, [gameIsOver, youWin])
 
   useEffect(() => {
     const setDefaultBombs = async () => {
-      const allStorage = await AsyncStorage.getAllKeys();
-      if(allStorage.includes("completedLevels")){
-        const completedLevels = JSON.parse(await AsyncStorage.getItem("completedLevels"));
-        if(completedLevels.includes(currentLevel)){
-          setCurrentLevelBombs([])
-        } else {
-          setCurrentLevelBombs(config.levelDefaultBombs[currentLevel])
-        }
-      } else {
+      // const allStorage = await AsyncStorage.getAllKeys();
+      // if(allStorage.includes("completedLevels")){
+      //   const completedLevels = JSON.parse(await AsyncStorage.getItem("completedLevels"));
+      //   if(completedLevels.includes(currentLevel)){
+      //     setCurrentLevelBombs([])
+      //   } else {
+      //     setCurrentLevelBombs(config.levelDefaultBombs[currentLevel])
+      //   }
+      // } else {
         setCurrentLevelBombs(config.levelDefaultBombs[currentLevel])
-      }
+      // }
     }
     setDefaultBombs();
     setTraining(util.breakRefAndCopy(trainRestrictions[currentLevel]));
