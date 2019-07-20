@@ -16,6 +16,7 @@ import GameOver from "../GameOver";
 import YouWin from "../YouWin";
 import InformativeScreen from "../InformativeScreen";
 import ScreenText from "../ScreenText";
+import Pointer from "../Pointer";
 
 import { gameBoards } from "../GameBoards";
 import { boxInfo } from "../util/BoxInfo";
@@ -645,12 +646,21 @@ const PlayGame = (props) => {
           image = images.makedaImg;
           style = explosionStlyes.makedaBombStyle();
         }
+
+        const restriction = training && training.yourMoves && training.yourMoves[0];
+        const blinkingBomb = (restriction && restriction.type === "explosionClick" && restriction.bomb === data);
+
         return (<TouchableOpacity key={index} onPress={() => selectBomb(data, index)}>
-          <Animated.View style={activeBomb === data + index ? explosionStlyes.selectedBomb(letterColor) : {}}>
+          <Animated.View style={((activeBomb === data + index) || blinkingBomb) ? explosionStlyes.selectedBomb(letterColor) : {}}>
             <Image
               style={style}
               source={image}
             />
+            {blinkingBomb && <Pointer
+                              startingLeft={50}
+                              startingBottom={50}
+                              duration={500}
+                              distance={10}/>}
           </Animated.View>
         </TouchableOpacity>)
       })}
