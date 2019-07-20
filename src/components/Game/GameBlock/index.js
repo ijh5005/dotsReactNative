@@ -82,7 +82,8 @@ const GameBlock = (props) => {
     isBottomSideRow,
     isLeftSideRow,
     footIndexes,
-    blinkingEdge
+    blinkingEdge,
+    blinkingBox
   } = props;
 
   const scoreColor = (scored === "second") && "#2b0938";
@@ -113,7 +114,7 @@ const GameBlock = (props) => {
 
   const styles = {
     box: {
-      backgroundColor: scoreColor || 'transparent',
+      backgroundColor: blinkingBox ? letterColor : (scoreColor || 'transparent'),
       height: 55,
       width: 55,
       position: "relative",
@@ -197,14 +198,10 @@ const GameBlock = (props) => {
       left: 0
     },
     foot: {
-      // height: "80%",
-      // width: "80%",
       height: "120%",
       width: "100%",
       top: "-10%",
       position: "absolute",
-      // top: "10%",
-      // left: "10%",
       justifyContent: "center",
       alignItems: "center"
     }
@@ -219,8 +216,8 @@ const GameBlock = (props) => {
   if(blinkingEdge === "top"){
     startingLeft = 35;
     startingBottom = 60;
-  } else if (blinkingEdge === "left") {
-    startingLeft = 10;
+  } else if (blinkingEdge === "left" || blinkingBox) {
+    startingLeft = blinkingBox ? 60 : 10;
     startingBottom = 20;
   }
 
@@ -265,7 +262,7 @@ const GameBlock = (props) => {
         />
       </View>}
 
-      {startingLeft && startingBottom
+      {((startingLeft && startingBottom) || blinkingBox)
         && <Pointer
             startingLeft={startingLeft}
             startingBottom={startingBottom}

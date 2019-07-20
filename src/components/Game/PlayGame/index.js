@@ -601,11 +601,17 @@ const PlayGame = (props) => {
       const hasScored = borders.top && borders.right && borders.bottom && borders.left;
       const borderColors = boxInfo.getBorderColors(box, whoClickedTheLineTracker);
 
-      let blinkingEdge = false;
       const restriction = training && training.yourMoves && training.yourMoves[0];
+
+      let blinkingEdge = false;
+      let blinkingBox = false;
+
       if (restriction && restriction.type === "clickSide" && playerTurn === "first"){
         const restrictionIndex = restriction.boxes.indexOf(index);
         blinkingEdge = (restrictionIndex !== -1) && restriction.sides[restrictionIndex];
+      }
+      if(restriction && (restriction.type === "boxClick") && (playerTurn === "first") && (index === restriction.clickBox)){
+        blinkingBox = true;
       }
 
       return (<GameBlock
@@ -630,6 +636,7 @@ const PlayGame = (props) => {
         setExplosionBoxes={setExplosionBoxes}
         footIndexes={footIndexes}
         blinkingEdge={blinkingEdge}
+        blinkingBox={blinkingBox}
         key={index} />)})}
 
     <View style={styles.bombSection} >
