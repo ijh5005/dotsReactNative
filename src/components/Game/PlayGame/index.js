@@ -506,7 +506,7 @@ const PlayGame = (props) => {
   }
 
   const changeLevel = (level, levelText) => {
-    if(levelText !== "x" || !levelText){
+    if((levelText !== "x" || !levelText) && currentLevel !== level){
       setBoard(util.breakRefAndCopy(gameBoards[level]));
       setPlayerTurn("first");
       setBorders(util.breakRefAndCopy(boxInfo.borderCount));

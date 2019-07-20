@@ -17,7 +17,7 @@ export const trainRestrictions = {
       text: "take turns selecting lines"
     }, {
       type: "clickSide",
-      boxes: [20, 21],
+      boxes: [21, 22],
       sides: ["right", "left"]
     }, {
       type: "clickSide",

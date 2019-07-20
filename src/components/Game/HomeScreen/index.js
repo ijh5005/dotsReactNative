@@ -29,11 +29,9 @@ const nameBoxStlye = (color = "#fff", fontSize = 20, opacity = 1) => {
 const HomeScreen = (props) => {
 
   const playGameMusic = () => {
-    setTimeout(() => {
-      introMusic.setCurrentTime(0);
-      introMusic.play();
-      introMusic.setNumberOfLoops(-1);
-    }, 1000)
+    introMusic.setCurrentTime(0);
+    introMusic.play();
+    introMusic.setNumberOfLoops(-1);
   }
 
   const {
